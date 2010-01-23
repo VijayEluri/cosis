@@ -15,28 +15,357 @@
 
 package cosis.gui;
 
+import cosis.Main;
+import cosis.fileio.Profile;
+import cosis.media.Picture;
+import cosis.security.Secure;
+import cosis.util.Errors;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Cursor;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JPanel;
+import javax.swing.JPasswordField;
+import javax.swing.KeyStroke;
+import javax.swing.SwingWorker;
+
 /**
  *
  * @author Kavon Farvardin
  */
 class SignIn implements ManagedWindow {
 
+    private JFrame frame;
+    private JMenu file,  help;
+    private JMenuItem newProfile,  faq,  quit,  removeProfile,  about;
+    private JLabel error;
+    private SignInPanel panel = new SignInPanel();
+    private int attempts = 0;
 
+    public SignIn() {
+        frame = new JFrame("Unlock Profile - " + Main.NAME + " " + Main.VERSION);
+        frame.setResizable(Main.DEBUG);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.addWindowListener(new WindowController(this));
+        frame.setContentPane(panel);
+        frame.setJMenuBar(makeMenuBar());
+        frame.pack();
+        frame.setLocationRelativeTo(null);
+        frame.setIconImage(Picture.getImageIcon("icons/cosis.png").getImage());
+    }
 
     public void minimize() {
-        throw new UnsupportedOperationException("Not supported yet.");
+//        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     public void maximize() {
-        throw new UnsupportedOperationException("Not supported yet.");
+//        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     public void destroy() {
-        throw new UnsupportedOperationException("Not supported yet.");
+//        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     public void display() {
-        throw new UnsupportedOperationException("Not supported yet.");
+//        throw new UnsupportedOperationException("Not supported yet.");
     }
+
+    public void refresh() {
+//        throw new UnsupportedOperationException("Not supported yet.");
+    }
+    
+    /**
+     * Makes the JMenuBar for the JFrame
+     */
+    private JMenuBar makeMenuBar() {
+        JMenuBar menubar = new JMenuBar();
+        file = new JMenu("File");
+        file.setMnemonic('F');
+
+        newProfile = new JMenuItem("New Profile", Picture.getImageIcon("icons/list_add_user.png"));
+        newProfile.setMnemonic('N');
+        newProfile.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N, ActionEvent.CTRL_MASK));
+        removeProfile = new JMenuItem("Remove Profile", Picture.getImageIcon("icons/list_remove_user.png"));
+        removeProfile.setMnemonic('R');
+        removeProfile.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_R, ActionEvent.CTRL_MASK));
+        quit = new JMenuItem("Exit", Picture.getImageIcon("icons/exit.png"));
+        quit.setMnemonic('E');
+        file.add(newProfile);
+        file.add(removeProfile);
+        file.addSeparator();
+        file.add(quit);
+
+        help = new JMenu("Help");
+        help.setMnemonic('H');
+        faq = new JMenuItem("F.A.Q.", Picture.getImageIcon("icons/help_hint.png"));
+        faq.setMnemonic('Q');
+        about = new JMenuItem("About", Picture.getImageIcon("icons/help_about.png"));
+        about.setMnemonic('A');
+        help.add(faq);
+        help.add(about);
+
+        MenuListener ml = new MenuListener();
+        newProfile.addActionListener(ml);
+        faq.addActionListener(ml);
+        quit.addActionListener(ml);
+        removeProfile.addActionListener(ml);
+        about.addActionListener(ml);
+
+        menubar.add(file);
+        menubar.add(help);
+        return menubar;
+    }
+    
+    private String[] getProfileNames() {
+//        String[] names = new String[profiles.length];
+//        for (int i = 0; i < profiles.length; i++) {
+//            names[i] = profiles[i].getName();
+//        }
+//        names = ManageData.mergeSort(names);
+        return null;
+    }
+
+    private class SignInPanel extends JPanel {
+
+        JLabel title;
+        JPanel titleRow, buttonRow;
+        JButton add, remove, signin;
+        JComboBox profileBox;
+        JPasswordField pwField;
+        DefaultComboBoxModel combomodel;
+
+        SignInPanel() {
+            setLayout(new BorderLayout(2, 2));
+            JPanel innerPanel = new JPanel();
+            innerPanel.setLayout(new BoxLayout(innerPanel, BoxLayout.Y_AXIS));
+
+            //title
+            titleRow = new JPanel();
+            titleRow.setLayout(new BoxLayout(titleRow, BoxLayout.X_AXIS));
+            title = new JLabel("Select a Profile");
+            title.setFont(new Font(title.getFont().toString(), Font.BOLD, 16));
+            title.setAlignmentX(CENTER_ALIGNMENT);
+            titleRow.add(title);
+
+            //buttonRow
+            buttonRow = new JPanel();
+            buttonRow.setLayout(new BoxLayout(buttonRow, BoxLayout.X_AXIS));
+            add = new JButton("New Profile", Picture.getImageIcon("icons/list_add16.png"));
+            remove = new JButton("Remove Profile", Picture.getImageIcon("icons/list_remove16.png"));
+
+            buttonRow.add(Box.createHorizontalStrut(25));
+            buttonRow.add(add);
+            buttonRow.add(Box.createHorizontalStrut(10));
+            buttonRow.add(remove);
+            buttonRow.add(Box.createHorizontalStrut(25));
+
+            //comboRow
+            JPanel comboRow = new JPanel();
+            comboRow.setLayout(new BoxLayout(comboRow, BoxLayout.X_AXIS));
+            combomodel = new DefaultComboBoxModel(getProfileNames());
+            profileBox = new JComboBox();
+            profileBox.setModel(combomodel);
+            profileBox.setAlignmentX(CENTER_ALIGNMENT);
+            comboRow.add(profileBox);
+
+            //pwRow
+            JPanel pwRow = new JPanel();
+            pwRow.setLayout(new BoxLayout(pwRow, BoxLayout.X_AXIS));
+            pwField = new JPasswordField();
+            signin = new JButton("Sign In");
+
+            pwRow.add(pwField);
+            pwRow.add(Box.createHorizontalStrut(10));
+            pwRow.add(signin);
+
+            ButtonListener bl = new ButtonListener();
+            signin.addActionListener(bl);
+            pwField.addKeyListener(new QuickSignin());
+            add.addActionListener(bl);
+            remove.addActionListener(bl);
+
+
+            ProfileChangeListener cl = new ProfileChangeListener();
+            profileBox.addActionListener(cl);
+
+            error = new JLabel("Incorrect password, please try again.");
+            error.setForeground(Color.RED);
+            error.setAlignmentX(CENTER_ALIGNMENT);
+            error.setVisible(false);
+
+
+            innerPanel.add(Box.createVerticalStrut(5));
+            innerPanel.add(titleRow);
+            innerPanel.add(Box.createVerticalStrut(15));
+            innerPanel.add(profileBox);
+            innerPanel.add(Box.createVerticalStrut(10));
+            innerPanel.add(pwRow);
+            innerPanel.add(Box.createVerticalStrut(3));
+            innerPanel.add(error);
+            innerPanel.add(new Box.Filler(new Dimension(1, 4), //min
+                    new Dimension(1, 22), //pref
+                    new Dimension(1, 32))); //max
+            innerPanel.add(buttonRow);
+            innerPanel.add(Box.createVerticalStrut(5));
+
+            add(innerPanel, BorderLayout.CENTER);   //these are to provide
+            add(new JPanel(), BorderLayout.EAST);   // space around the frame
+            add(new JPanel(), BorderLayout.WEST);   // from borderlayout
+            add(new JPanel(), BorderLayout.SOUTH);
+            add(new JPanel(), BorderLayout.NORTH);
+        }
+    }
+
+        private class QuickSignin extends KeyAdapter {
+        @Override
+        public void keyReleased(KeyEvent e) {
+            if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+                panel.signin.doClick();
+            }
+        }
+    }
+
+    /**
+     * Clears the password field if the user chooses another profile from the combobox
+     */
+    private class ProfileChangeListener implements ActionListener {
+        public void actionPerformed(ActionEvent e) {
+            panel.pwField.setText("");
+            error.setVisible(false);
+            attempts = 0;
+        }
+    }
+
+    /**
+     * JMenuBar's listener
+     */
+    private class MenuListener implements ActionListener {
+
+        public void actionPerformed(ActionEvent e) { //JMenuItem newProfile, faq, quit, removeProfile, about;
+            if (e.getSource() == about) {
+//                new About();
+            }
+            if (e.getSource() == newProfile) {
+//                new CreateProfile(false);
+            }
+            if (e.getSource() == faq) {
+//                new FAQ();
+            }
+            if (e.getSource() == quit) {
+//                System.exit(0);
+            }
+            if (e.getSource() == removeProfile) {
+//                new RemoveProfile(frame, getMatchingProfile((String) panel.profileBox.getSelectedItem()));
+            }
+        }
+    }
+
+    /**
+     * Handles events, signs the user in
+     */
+    private class ButtonListener implements ActionListener {
+
+        public void actionPerformed(ActionEvent e) {
+            if (e.getSource() == panel.signin) {
+                frame.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+
+                //disable the rest of the window while we do this shit
+                error.setVisible(false);
+                panel.pwField.setEnabled(false);
+                panel.profileBox.setEnabled(false);
+                panel.add.setEnabled(false);
+                panel.remove.setEnabled(false);
+                panel.signin.setEnabled(false);
+                file.setEnabled(false);
+                help.setEnabled(false);
+
+//                Authenticate auth = new Authenticate(getMatchingProfile((String) panel.profileBox.getSelectedItem()));
+//                auth.execute();
+
+            }
+            if (e.getSource() == panel.add) {
+//                new CreateProfile(false);
+            }
+            if (e.getSource() == panel.remove) {
+//                new RemoveProfile(frame, getMatchingProfile((String) panel.profileBox.getSelectedItem()));
+            }
+        }
+    }
+
+    private Secure authorize(Profile profile, String password) {
+        return null;
+//        try {
+//            Secure check = new Secure(password, profile.getSalt());
+//            check.decrypt(profile.getVerification());
+//            return check;
+//        } catch (BadPaddingException ex) {
+//            Errors.log("Bad password attempt on profile -> " + profile.getName(), SignIn.class);
+//            return null;
+//        } catch (IllegalBlockSizeException ex) {
+//            Errors.log("Bad password attempt on profile -> " + profile.getName(), SignIn.class);
+//            return null;
+//        }
+    }
+
+    private class Authenticate extends SwingWorker<Secure, Object> {
+
+        private Profile user;
+
+        Authenticate(Profile user) {
+            this.user = user;
+        }
+
+        @Override
+        public Secure doInBackground() {
+            return authorize(user, new String(panel.pwField.getPassword()));
+        }
+
+        @Override
+        protected void done() {
+            try {
+                Secure auth = get();
+                if (auth == null) {
+                    frame.setCursor(null);
+                    error.setVisible(true);
+                    panel.pwField.setEnabled(true);
+                    panel.profileBox.setEnabled(true);
+                    panel.add.setEnabled(true);
+                    panel.remove.setEnabled(true);
+                    panel.signin.setEnabled(true);
+                    file.setEnabled(true);
+                    help.setEnabled(true);
+                    panel.pwField.setText("");
+                    attempts++;
+
+                    if (user.isRecoveryEnabled() && (attempts % 2) != 0 && attempts >= 3) {
+                        Errors.displayInformation("Hint: " + user.getHint());
+                    }
+                    panel.pwField.requestFocusInWindow();
+                } else {
+                    frame.setCursor(null);
+                    frame.dispose();
+//                    new ShowProfile(user, auth, signTray);
+                }
+            } catch (Exception ignore) {
+            }
+        }
+    }
+
+
 
 }

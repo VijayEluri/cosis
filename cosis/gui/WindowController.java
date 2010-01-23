@@ -15,14 +15,42 @@
 
 package cosis.gui;
 
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+
 /**
  * @author Kavon Farvardin
- * @since 1.0
  */
-interface ManagedWindow {
-    void minimize();
-    void maximize();
-    void destroy();
-    void display();
-    void refresh();
+class WindowController extends WindowAdapter {
+
+    ManagedWindow mw;
+
+    WindowController(ManagedWindow mw) {
+        this.mw = mw;
+    }
+
+    @Override
+    public void windowIconified(WindowEvent e) {
+        mw.minimize();
+    }
+
+    @Override
+    public void windowDeiconified(WindowEvent e) {
+        mw.maximize();
+    }
+
+    @Override
+    public void windowClosing(WindowEvent e) {
+        mw.destroy();
+    }
+
+    @Override
+    public void windowGainedFocus(WindowEvent e) {
+        mw.refresh();
+    }
+
+    @Override
+    public void windowOpened(WindowEvent e) {
+        mw.display();
+    }
 }
