@@ -16,6 +16,7 @@
 
 package cosis;
 
+import cosis.gui.SignIn;
 import cosis.util.*;
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
@@ -71,6 +72,7 @@ public class Main {
             Errors.log(ex);
         }
 
+        new SignIn();
 
     }
 

@@ -403,62 +403,9 @@ public class Profile {
         this.hint = hint;
     }
 
+    @Override
+    public String toString() {
+        return name;
+    }
 
-
-
-//    private Account[] toAccountArray(ArrayList<Account> list) {
-//        Account[] accounts = new Account[list.size()];
-//        for(int i = 0; i < list.size(); i++) {
-//            accounts[i] = list.get(i);
-//        }
-//        return accounts;
-//    }
-//    public void flushAccountList(Account[] newStuff) {
-//       if(accountData.size() != 0) accountData.clear();
-//       for(Account acct : newStuff) {
-//           accountData.add(acct);
-//       }
-//    }
-////    public Account[] getAccounts(Secure auth) {
-////        if(accountDataLoaded) {
-////            Account[] result = toAccountArray(Utils.mergeSortAccount(accountData));
-////            return result;
-////        } else {
-////            try {
-////                byte[] rawData = readByteArray(in);
-////                accountData = new ArrayList<Account>();
-////                flushAccountList(ManageData.formulateAccounts(auth.decrypt(rawData)));
-////                accountDataLoaded = true;
-////                return toAccountArray(accountData);
-////            } catch (IllegalBlockSizeException ex) {
-////                Errors.log(ex, Profile.class);
-////                return null;
-////            } catch (BadPaddingException ex) {
-////                Errors.log(ex, Profile.class);
-////                return null;
-////            }
-////        }
-////    }
-//    public void addAccount(Account newAccount) {
-//        accountData.add(newAccount);
-//    }
-//    public void removeAccount(Account rmAccount) {
-//        accountData.remove(rmAccount);
-//    }
-//    public String[] getRawAccountData(Account[] data) {
-//
-//        ArrayList<String> rawData = new ArrayList<String>();
-//
-//        for(Account act : data) {
-//           String[] chunk = act.getAllData();
-//           for(String piece : chunk) {
-//            rawData.add(piece);
-//            }
-//        }
-//        String[] result = new String[rawData.size()];
-//        for (int i = 0; i < rawData.size(); i++) {
-//            result[i] = rawData.get(i);
-//        }
-//        return result;
-//    }
 }

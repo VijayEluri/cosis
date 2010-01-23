@@ -45,6 +45,20 @@ public abstract class FileIO {
     }
 
     /**
+     * Retrieves profiles
+     * @return Profile[]
+     */
+    public static Profile[] getProfiles() {
+        File[] files = getUserFiles();
+        Profile[] profiles = new Profile[files.length];
+
+        for (int i = 0; i < files.length; i++) {
+            profiles[i] = new Profile(files[i]);
+        }
+        return profiles;
+    }
+
+    /**
      * @param name name of profile
      * @return If the desired profile name has a conflict, null will be returned.
      */
