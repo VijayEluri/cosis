@@ -17,10 +17,6 @@
 package cosis;
 
 import cosis.util.*;
-import java.io.File;
-import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 
@@ -36,8 +32,12 @@ public class Main {
     public static final String NAME = "Cosis";
     public static final String CONTACT = "cosis.googlecode.com";
     public static final String[] AUTHORS = {"Kavon Farvardin"};
+
     public static boolean WIN = false, MAC = false, UNIX = false, TRAY = true;
 
+    /**
+     * @param args ignored
+     */
     public static void main(String[] args) {
         
         /**

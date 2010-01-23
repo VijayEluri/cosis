@@ -20,20 +20,27 @@ import java.util.ArrayList;
 /**
  * Manages all GUI windows.
  * @author Kavon Farvardin
- * @since
  */
-public class WindowManager {
+class WindowManager {
 
-    private ManagedWindow mainWindow;
+    private ManagedWindow major;
     private ArrayList<ManagedWindow> minors = new ArrayList<ManagedWindow>();
-    private Tray tray;
 
-    WindowManager(ManagedWindow mjw) {
-        setMajorWindow(mjw);
+    WindowManager(ManagedWindow major) {
+        setMajorWindow(major);
     }
-    
-    public void setMajorWindow(ManagedWindow mjw) {
-        mainWindow = mjw;
+
+    //temp constructor
+    WindowManager() {
+
+    }
+
+    /**
+     * Sets another ManagedWindow as the MajorWindow
+     * @param mjw
+     */
+    public void setMajorWindow(ManagedWindow major) {
+        this.major = major;
     }
 
     /**
@@ -41,49 +48,55 @@ public class WindowManager {
      * its display method.
      * @param mnw
      */
-    public void addMinor(ManagedWindow mnw) {
-        minors.add(mnw);
-        mnw.display();
+    public void addMinor(ManagedWindow minor) {
+        minors.add(minor);
+        minor.display();
     }    
     /**
      * Finds the given ManagedWindow and calls destroy, then removes
      * it from the manager.
      */
-    public void removeMinor(ManagedWindow mnw) {
+    public void removeMinor(ManagedWindow minor) {
         for(int i = 0; i < minors.size(); i++) {
-            if(minors.get(i) == mnw) {
-                mnw.destroy();
+            if(minors.get(i) == minor) {
+                minor.destroy();
                 minors.remove(i);
             }
         }
     }
 
     /**
-     * Calls minimize() on all ManagedWindows
+     * Calls minimize on all ManagedWindows
      */
     public void minimizeAll() {
         for(ManagedWindow item : minors)
             item.minimize();
-        mainWindow.minimize();
+        major.minimize();
     }
 
     /**
-     * Calls maximise on all ManagedWindows
+     * Calls maximize on all ManagedWindows
      */
     public void maximizeAll() {
-        mainWindow.maximize();
+        major.maximize();
         for(ManagedWindow item : minors)
             item.maximize();
     }
 
-    public int getNumberOfMinors() {
-        return minors.size();
-    }
+    /**
+     * Destroys all minor ManagedWindows
+     */
     public void destroyMinors() {
+        for(int i = 0; i < minors.size(); i++)
+            minors.get(i).destroy();
+        minors.clear();
+    }
 
+    /**
+     * Destroys all windows.
+     */
+    public void destroyAll() {
+        destroyMinors();
+        major.destroy();
     }
-    public void destroyMajor() {
-        
-    }
-    //public void prioritize(ManagedWindow aMinor) ????
 }

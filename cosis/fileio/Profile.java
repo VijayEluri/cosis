@@ -17,7 +17,6 @@ package cosis.fileio;
 
 import cosis.security.Secure;
 import cosis.util.Errors;
-import cosis.util.Utils;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
@@ -48,6 +47,7 @@ public class Profile {
 
     /**
      * Used by the sign in window to display available profiles
+     * @param data file to load for this profile
      */
     public Profile(File data) {        
         load(data);
@@ -71,6 +71,12 @@ public class Profile {
         }
     }
 
+    /**
+     *
+     * @param authKey instance of Secure which will be tested
+     * @return true if and only if the provided Secure instance can decrypt
+     * all user data correctly
+     */
     public boolean authenticate(Secure authKey) {
         try {
             String testVerify = authKey.decrypt(encryptedVerification)[0];
@@ -115,10 +121,11 @@ public class Profile {
     }
 
     /**
-     * Returns a Profile with the default settings and provided name, it is saved
-     * to the hard disk before returning.
-     *
-     * equivilent to makeProfile
+     * Creates a profile and saves it to the cosis data folder.
+     * @param name name of Profile
+     * @param salt salt for Profile
+     * @param password password for Profile
+     * @return true only if the profile was created sucessfully
      */
     public static boolean generateProfile(String name, String password, String salt) {
         try {
@@ -180,6 +187,9 @@ public class Profile {
         }
     }
 
+    /**
+     * Saves this profile in its current state.
+     */
     public void save() {
         try {
             DataOutputStream out = new DataOutputStream(new FileOutputStream(file));
@@ -249,6 +259,8 @@ public class Profile {
 
     /**
      * Reads the rest of the DataInputStream's bytes
+     * @param in the stream
+     * @return teh rest of the stream
      */
     public static byte[] readByteArray(DataInputStream in) {
         try {
@@ -260,12 +272,17 @@ public class Profile {
     }
 
     /**
-     * Getters and Setters
+     * @return name of this profile
      */
     public String getName() {
         return name;
     }
 
+    /**
+     * @param name name to assign to this profile
+     * @return true if name was successfully changed, false
+     * for any other reason including duplicate profile name
+     */
     public boolean setName(String name) {
         String newFileName = FileIO.getFileNameForName(name);
         if(newFileName == null)
@@ -275,14 +292,23 @@ public class Profile {
         return file.renameTo(new File(System.getProperty("user.dir") + "/cosis_data", newFileName));
     }
 
+    /**
+     * @return the salt of this profile
+     */
     public String getSalt() {
         return salt;
     }
 
+    /**
+     * @return the instance of Secure which can encrypt/decrypt its data
+     */
     public Secure getSecure() {
         return auth;
     }
 
+    /**
+     * @param newSecure assigns this profile to use this instance of Secure
+     */
     public void setSecure(Secure newSecure) {
         newAuth = newSecure;
         save();
@@ -292,26 +318,44 @@ public class Profile {
         authenticate(auth);
     }
 
+    /**
+     * @return the file which this profile saves to etc
+     */
     public File getFile() {
         return file;
     }
 
-      public int getTimeout() {
+    /**
+     * @return the idle logout time setting
+     */
+    public int getTimeout() {
         return timeout;
     }
 
-    public void setTimeout(int time) {
+      /**
+       * @param time sets profile to this timeout setting
+       */
+      public void setTimeout(int time) {
         timeout = time;
     }
 
+    /**
+     * @return whether or not backup is enabled
+     */
     public boolean isBackupEnabled() {
         return backup;
     }
 
+    /**
+     * @param pool sets the backup setting of this profile
+     */
     public void setBackupEnabled(boolean pool) {
         backup = pool;
     }
 
+    /**
+     * @return the data backup file path
+     */
     public String getBackupPath() {
         if (isBackupEnabled()) {
             return path;
@@ -320,18 +364,30 @@ public class Profile {
         }
     }
 
+    /**
+     * @param newpath sets a new file path for data file backups
+     */
     public void setBackupPath(String newpath) {
         path = newpath;
     }
 
+    /**
+     * @return whether or not recovery is enabled
+     */
     public boolean isRecoveryEnabled() {
         return recovery;
     }
 
+    /**
+     * @param pool sets recovery to this setting
+     */
     public void setRecoveryEnabled(boolean pool) {
         recovery = pool;
     }
 
+    /**
+     * @return gets this profile's hint message, returns an empty string if none
+     */
     public String getHint() {
         if (isRecoveryEnabled()) {
             return hint;
@@ -340,6 +396,9 @@ public class Profile {
         }
     }
 
+    /**
+     * @param hint assigns hint
+     */
     public void setHint(String hint) {
         this.hint = hint;
     }

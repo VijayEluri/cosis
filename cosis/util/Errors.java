@@ -32,15 +32,15 @@ import javax.swing.JOptionPane;
 public abstract class Errors {
 
     /**
-     * Displays a pop-up menu with a warning icon and a message.
+     * @param warning The message to be displayed.
      */
     public static void displayWarning(String warning) {
         JOptionPane.showMessageDialog(null, warning, "Warning! - "
                 + Main.NAME, JOptionPane.WARNING_MESSAGE, Picture.getImageIcon("error.png"));
     }
     /**
-     * Displays a pop-up menu with a warning icon and a message.
-     * Overrides a JFrame's AlwaysOnTop setting for a second.
+     * @param warning message to be displayed
+     * @param frame the frame that will have it's AlwaysOnTop setting temporarily turned off to display the message.
      */
     public static void displayWarning(String warning, JFrame frame) {
         frame.setAlwaysOnTop(false);
@@ -50,15 +50,15 @@ public abstract class Errors {
     }
 
     /**
-     * Displays a pop-up menu with an informative icon and a message.
+     * @param message The message to be displayed.
      */
     public static void displayInformation(String message) {
         JOptionPane.showMessageDialog(null, message, "Information - "
                 + Main.NAME, JOptionPane.INFORMATION_MESSAGE, Picture.getImageIcon("info.png"));
     }
     /**
-     * Displays a pop-up menu with an informative icon and a message.
-     * Overrides a JFrame's AlwaysOnTop setting for a second.
+     * @param message message to be displayed
+     * @param frame the frame that will have it's AlwaysOnTop setting temporarily turned off to display the message.
      */
     public static void displayInformation(String message, JFrame frame) {
         frame.setAlwaysOnTop(false);
@@ -67,6 +67,9 @@ public abstract class Errors {
         frame.setAlwaysOnTop(true);
     }
 
+    /**
+     * @param ex the Exception to output to log file
+     */
     public static void log(Exception ex) {
 
         try {
@@ -84,6 +87,9 @@ public abstract class Errors {
             ex.printStackTrace();
     }
 
+    /**
+     * Prints information about the operating system to the log file for error reporting purposes
+     */
     public static void logSystemInformation() {
         throw new UnsupportedOperationException("Logging system information has not yet been implemented.");
     }

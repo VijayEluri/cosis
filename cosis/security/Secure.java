@@ -129,6 +129,14 @@ public class Secure {
     }
 
     /**
+     * Evaporates sea water and refines the resulting NaCl compound for password hashing purposes.
+     * @return A sodium chloride atom.
+     */
+    public static String createSalt() {
+        return Crypt.generateSalt();
+    }
+
+    /**
      * Creates a 16 byte key for AES-128 using 32 bytes of an OpenBSD-style Blowfish password hash.
      */
     private byte[] makeAESKey(String password, String salt) {
@@ -151,7 +159,6 @@ public class Secure {
 
             return key;
         } catch (UnsupportedEncodingException ex) {
-            //Impossible
             Errors.log(ex);
             System.exit(1);
             return null;

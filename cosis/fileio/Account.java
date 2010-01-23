@@ -28,6 +28,21 @@ public class Account {
     private boolean passwordHidden, favorite;
     private byte[] password;
     private Profile profile;
+    /**
+     *
+     * @param name Name
+     * @param path Path for its image
+     * @param userID User ID
+     * @param password Password
+     * @param notes Misc notes
+     * @param dateCreated creation date
+     * @param dateModified last modification
+     * @param passwordHidden if password is to be starred out
+     * @param favorite if this account is in the system tray
+     * @param associatedProfile profile this account belongs to
+     * @throws IllegalBlockSizeException
+     * @throws BadPaddingException
+     */
     public Account(String name, String path, String userID, String password,
             String notes, String dateCreated, String dateModified, 
             boolean passwordHidden, boolean favorite, Profile associatedProfile)
@@ -46,63 +61,104 @@ public class Account {
         this.favorite = favorite;
         
     }
+
     public String getName() {
         return name;
     }
+
     public void setName(String newName) {
         name = newName;
     }
+
     public String getImagePath() {
         return path;
     }
+
     public void setImagePath(String newPath) {
         path = newPath;
     }
+
     public String getUserID() {
         return userID;
     }
+
     public void setUserID(String newID) {
         userID = newID;
     }
+    /**
+     * Uses the Secure of the designated Profile this Account belongs to.
+     * @return decrypted password
+     * @throws IllegalBlockSizeException
+     * @throws BadPaddingException
+     */
     public String getDecryptedPassword() throws IllegalBlockSizeException, BadPaddingException {
         return profile.getSecure().decrypt(password)[0];
     }
+    /**
+     * Uses the Secure of the designated Profile this Account belongs to.
+     * @param newPassword encrypted and stored
+     * @throws IllegalBlockSizeException
+     * @throws BadPaddingException
+     */
     public void setPassword(String newPassword) throws IllegalBlockSizeException, BadPaddingException {
         password = profile.getSecure().encrypt(newPassword);
     }
+
     public boolean isPasswordHidden() {
         return passwordHidden;
     }
+
     public void setPasswordHidden(Boolean passwordHidden) {
         this.passwordHidden = passwordHidden;
     }
+
     public String getNotes() {
         return notes;
     }
+
     public void setNotes(String newNotes) {
         notes = newNotes;
     }
+
     public String getDateCreated() {
         return dateCreated;
     }
+
     public String getLastEditDate() {
         return dateModified;
     }
+
     public void setLastEditDate(String date) {
         dateModified = date;
     }
+    /**
+     * AKA "Show in System Tray"
+     */
     public void setFavorite(boolean toggle) {
         favorite = toggle;
     }
+    /**
+     * true if set to show in system tray, false otherwise
+     */
     public boolean isFavorite() {
         return favorite;
     }
+    /**
+     * @return this account's data in the same order as the params for creating an account, for saving
+     * @throws IllegalBlockSizeException
+     * @throws BadPaddingException
+     */
     public String[] getAllData() throws IllegalBlockSizeException, BadPaddingException {
         String[] allData = {
             name, path, userID, profile.getSecure().decrypt(password)[0], notes, dateCreated, dateModified, Boolean.toString(passwordHidden), Boolean.toString(favorite)
         };
         return allData;
     }
+    /**
+     * Compares each account's getAllData() arrays for equivilent data
+     * @param other the other account
+     * @return true if the datas are the same, false otherwise
+     */
     public boolean equals(Account other) {
         try {
             String[] acct1 = getAllData();

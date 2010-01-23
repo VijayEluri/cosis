@@ -37,7 +37,7 @@ import java.security.SecureRandom;
  * This is pretty much an edited version of the popular BCrypt. I'm using it's
  * computationally intensive hash products has a key for an AES cipher
  */
-public class Crypt {
+class Crypt {
 	// Crypt parameters
 	private static int GENSALT_DEFAULT_LOG2_ROUNDS = 13;
 	private static final int BCRYPT_SALT_LEN = 16;
@@ -673,7 +673,7 @@ public class Crypt {
 	 * @param random		an instance of SecureRandom to use
 	 * @return	an encoded salt value
 	 */
-	public static String generateSalt(int log_rounds, SecureRandom random) {
+	private static String generateSalt(int log_rounds, SecureRandom random) {
 		StringBuffer rs = new StringBuffer();
 		byte rnd[] = new byte[BCRYPT_SALT_LEN];
 
@@ -689,24 +689,13 @@ public class Crypt {
 	}
 
 	/**
-	 * Generate a salt for use with the Crypt.hashpw() method
-	 * @param log_rounds	the log2 of the number of rounds of
-	 * hashing to apply - the work factor therefore increases as
-	 * 2**log_rounds.
-	 * @return	an encoded salt value
-	 */
-	public static String generateSalt(int log_rounds) {
-		return generateSalt(log_rounds, new SecureRandom());
-	}
-
-	/**
 	 * Generate a salt for use with the Crypt.hashpw() method,
 	 * selecting a reasonable default for the number of hashing
 	 * rounds to apply
 	 * @return	an encoded salt value
 	 */
 	public static String generateSalt() {
-		return generateSalt(GENSALT_DEFAULT_LOG2_ROUNDS);
+		return generateSalt(GENSALT_DEFAULT_LOG2_ROUNDS, new SecureRandom());
 	}
 
 }

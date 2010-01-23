@@ -36,18 +36,28 @@ public class Picture {
         this.path = path;
         custom = path.startsWith("generic/") ? false : true;
     }
+    /**
+     * @return the ImageIcon
+     */
     public ImageIcon getIcon() {
         return icon;
     }
+    /**
+     * @return the path of this picture
+     */
     public String getPath() {
         return path;
     }
+    /**
+     * @return true if the image is not one included with Cosis, false otherwise.
+     */
     public boolean isCustom() {
         return custom;
     }
 
     /**
      * Finds an image to be converted to an ImageIcon. Image must be within the jar file
+     * @param path path of image
      * @return Returns an ImageIcon of the image in the path specified
      */
     public static ImageIcon getImageIcon(String path) {
@@ -76,6 +86,9 @@ public class Picture {
         }
     }
 
+    /**
+     * @return local path of images
+     */
     public static Picture[] getGenericPictures() {
         /*Fucking most ridiculous thing ever...
          Apparently it is almost motherfucking impossible

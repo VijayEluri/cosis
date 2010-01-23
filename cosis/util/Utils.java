@@ -31,9 +31,8 @@ import javax.swing.JLabel;
 public abstract class Utils {
 
     /**
-     * Removes spaces and replaces them with underscores, does not modify
-     * the orginal String.
-     * @return Returns a String with no spaces
+     * @param orig String to have spaces removed
+     * @return Returns a String with no spaces, does not modify origional
      */
     public static String removeSpaces(String orig) {
         String modify = orig;
@@ -44,6 +43,7 @@ public abstract class Utils {
 
     /**
      * Produces a timestamp, mostly used for logging.
+     * @return the current time and date
      */
     public static String getTimestamp() {
         Calendar now = new GregorianCalendar();
@@ -82,7 +82,8 @@ public abstract class Utils {
     }
     /**
      * Checks for an illegal character in a String
-     * @return Returns true if the String contains an illegal character
+     * @param s String to check
+     * @return Returns true if the String contains an illegal character, false otherwise
      */
     public static boolean hasIllegalCharacters(String s) {
         if(s.contains("/") || s.contains("\\") || s.contains(":") || s.contains(";")
@@ -97,6 +98,7 @@ public abstract class Utils {
     }
     /**
      * Checks the first letter of a String for an upper or lowercase letter
+     * @param s String to check
      * @return Returns true if the String begins with an upper or lowercase letter
      */
     public static boolean hasFirstLetter(String s) {
@@ -106,6 +108,8 @@ public abstract class Utils {
     /**
      * Alphabetizes a String[], ignoring case.
      * Uses a Merge Sort algorithm
+     * @param array 
+     * @return String[] in lexiographical order
      */
     public static String[] mergeSort(String[] array) {
         ArrayList<String> list = new ArrayList<String>();
@@ -124,6 +128,8 @@ public abstract class Utils {
     /**
      * Alphabetizes the Account[] by name, ignoring case.
      * Uses a Merge Sort algorithm.
+     * @param array 
+     * @return Account[] in lexiographical order according to its Name
      */
     public static Account[] mergeSort(Account[] array) {
         ArrayList<Account> list = new ArrayList<Account>();
@@ -141,12 +147,12 @@ public abstract class Utils {
     }
 
     /**
-     * Alphabetizes an ArrayList<String> recursivley with
+     * Alphabetizes an ArrayList of Strings recursivley with
      * a Merge Sort style algorithm, which should have n*log(n)
      * complexity.
      *
-     * @author Kavon Farvardin
-     * @return a sorted ArrayList<String>
+     * @param list list to sort
+     * @return a sorted ArrayList of Strings
      */
     public static ArrayList<String> mergeSortString(ArrayList<String> list) {
         ArrayList<String> left = new ArrayList<String>();
@@ -170,8 +176,6 @@ public abstract class Utils {
     }
     /**
      * Does the actual merging for mergeSortString(ArrayList<String>)
-     *
-     * @author Kavon Farvardin
      */
     private static ArrayList<String> mergeString(ArrayList<String> left, ArrayList<String> right) {
         ArrayList<String> result = new ArrayList<String>();
@@ -198,12 +202,12 @@ public abstract class Utils {
     }
 
     /**
-     * Alphabetizes an ArrayList<Account> recursivley with
+     * Alphabetizes an ArrayList of Accounts recursivley with
      * a Merge Sort style algorithm, which should have n*log(n)
      * complexity.
      *
-     * @author Kavon Farvardin
-     * @return a sorted ArrayList<String>
+     * @param list to be sorted
+     * @return a sorted ArrayList of Account
      */
     public static ArrayList<Account> mergeSortAccount(ArrayList<Account> list) {
         ArrayList<Account> left = new ArrayList<Account>();
@@ -227,8 +231,6 @@ public abstract class Utils {
     }
     /**
      * Does the actual merging for mergeSortAccount()
-     *
-     * @author Kavon Farvardin
      */
     private static ArrayList<Account> mergeAccount(ArrayList<Account> left, ArrayList<Account> right) {
         ArrayList<Account> result = new ArrayList<Account>();

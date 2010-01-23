@@ -17,7 +17,7 @@ import java.util.ArrayList;
 public abstract class FileIO {
     /**
      * Finds valid user data files.
-     * @param directory Directory to search
+     * @return File[] of .db8 files within the cosis folder
      */
     public static File[] getUserFiles() {
         File[] allFiles = (new File(System.getProperty("user.dir") + "/cosis_data")).listFiles();
@@ -45,6 +45,7 @@ public abstract class FileIO {
     }
 
     /**
+     * @param name name of profile
      * @return If the desired profile name has a conflict, null will be returned.
      */
     public static String getFileNameForName(String name) {

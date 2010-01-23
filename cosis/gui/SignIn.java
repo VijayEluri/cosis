@@ -19,6 +19,24 @@ package cosis.gui;
  *
  * @author Kavon Farvardin
  */
-public class SignIn {
+class SignIn implements ManagedWindow {
+
+
+
+    public void minimize() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    public void maximize() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    public void destroy() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    public void display() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
 
 }

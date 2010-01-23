@@ -19,7 +19,7 @@ package cosis.gui;
  * @author Kavon Farvardin
  * @since 1.0
  */
-public interface ManagedWindow {
+interface ManagedWindow {
     void minimize();
     void maximize();
     void destroy();
