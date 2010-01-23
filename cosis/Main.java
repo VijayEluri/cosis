@@ -72,16 +72,6 @@ public class Main {
         }
 
 
-//        try {
-//            File userFile = new File(System.getProperty("user.dir") + "/cosis_data", "test1");
-////            userFile.createNewFile();
-//
-//            userFile.renameTo(new File(System.getProperty("user.dir") + "/cosis_data", "test2"));
-//
-//        } catch (Exception ex) {
-//            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
-//        }
-
     }
 
 }
