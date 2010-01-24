@@ -150,23 +150,23 @@ class CreateProfile implements ManagedWindow {
     }
 
     public void minimize() {
-//        throw new UnsupportedOperationException("Not supported yet.");
+        //no tray support yet
     }
 
     public void maximize() {
-//        throw new UnsupportedOperationException("Not supported yet.");
+        //no tray support yet
     }
 
     public void destroy() {
-//        throw new UnsupportedOperationException("Not supported yet.");
+        frame.dispose();
     }
 
     public void display() {
-//        throw new UnsupportedOperationException("Not supported yet.");
+        frame.setVisible(true);
     }
 
     public void refresh() {
-//        throw new UnsupportedOperationException("Not supported yet.");
+        frame.validate();
     }
 
     public Component getComponentForLocation() {
@@ -197,15 +197,12 @@ class CreateProfile implements ManagedWindow {
             try {
                 if (get()) {
                     if (Main.firstRun) {
-//                        currentframes[0].dispose();
-                        frame.dispose();
-//                        new SignIn(false);
-
                         Main.firstRun = false;
+                        Main.wm.destroyAll();                        
                     } else {
-//                        currentframes[0].setEnabled(true);
-                        frame.dispose();
+                        Main.wm.removeMinor(CreateProfile.this);
                     }
+                    Main.wm.setMajorWindow(new SignIn());
                 } else {
                     Utils.showJLabelError(11, error);
                     nameField.setEnabled(true);

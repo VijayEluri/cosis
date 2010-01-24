@@ -17,10 +17,12 @@
 package cosis;
 
 import cosis.fileio.FileIO;
+import cosis.gui.SignIn;
 import cosis.gui.Welcome;
 import cosis.gui.WindowManager;
 import cosis.util.*;
 import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
 /**
@@ -80,10 +82,17 @@ public class Main {
 
         firstRun = FileIO.isFirstRun();
 
-        if(firstRun)
-            wm.setMajorWindow(new Welcome());
-        else
-            System.out.println("no");
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                if (firstRun) {
+                    wm.setMajorWindow(new Welcome());
+                } else {
+                    wm.setMajorWindow(new SignIn());
+                }
+            }
+        });
+
         
     }
 

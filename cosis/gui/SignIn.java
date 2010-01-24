@@ -66,9 +66,10 @@ public class SignIn implements ManagedWindow {
         frame.addWindowListener(new WindowController(this));
         frame.setContentPane(panel);
         frame.setJMenuBar(makeMenuBar());
+        frame.setIconImage(Picture.getImageIcon("cosis.png").getImage());
+        frame.setVisible(true);
         frame.pack();
         frame.setLocationRelativeTo(null);
-        frame.setIconImage(Picture.getImageIcon("cosis.png").getImage());
     }
 
     public void minimize() {
