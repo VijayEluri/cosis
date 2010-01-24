@@ -23,6 +23,7 @@ import cosis.security.Secure;
 import cosis.util.Errors;
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -90,6 +91,10 @@ public class SignIn implements ManagedWindow {
 //        throw new UnsupportedOperationException("Not supported yet.");
     }
     
+    public Component getComponentForLocation() {
+        return (Component)frame;
+    }
+
     /**
      * Makes the JMenuBar for the JFrame
      */

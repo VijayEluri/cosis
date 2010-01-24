@@ -18,6 +18,7 @@ package cosis.gui;
 import cosis.Main;
 import cosis.media.Picture;
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -33,19 +34,21 @@ import javax.swing.JPanel;
  * @author Kavon Farvardin
  * @since Version 0.1b
  */
-class Welcome implements ManagedWindow {
+public class Welcome implements ManagedWindow {
 
     private JButton add, exit;
+    private JFrame frame;
 
     public Welcome() {
-        JFrame frame = new JFrame(Main.NAME + " " + Main.VERSION);
+        frame = new JFrame(Main.NAME + " " + Main.VERSION);
         frame.setResizable(Main.DEBUG);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setContentPane(new MainPanel());
+        frame.addWindowListener(new WindowController(this));
         frame.pack();
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
-        frame.setIconImage(Picture.getImageIcon("icons/cosis.png").getImage());
+        frame.setIconImage(Picture.getImageIcon("cosis.png").getImage());
     }
 
     public void minimize() {
@@ -57,15 +60,19 @@ class Welcome implements ManagedWindow {
     }
 
     public void destroy() {
-//        throw new UnsupportedOperationException("Not supported yet.");
+//        System.out.println("Destroy from Welcome");
     }
 
     public void display() {
-//        throw new UnsupportedOperationException("Not supported yet.");
+//        System.out.println("Display from Welcome");
     }
 
     public void refresh() {
 //        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    public Component getComponentForLocation() {
+        return (Component)frame;
     }
 
     private class MainPanel extends JPanel {
@@ -101,8 +108,8 @@ class Welcome implements ManagedWindow {
 
             //buttonRow
             buttonRow = new JPanel();
-            add = new JButton("Add", Picture.getImageIcon("icons/list_add16.png"));
-            exit = new JButton("Exit", Picture.getImageIcon("icons/exit.png"));
+            add = new JButton("Add", Picture.getImageIcon("list_add16.png"));
+            exit = new JButton("Exit", Picture.getImageIcon("exit.png"));
 
             buttonRow.setLayout(new BoxLayout(buttonRow, BoxLayout.X_AXIS));
             buttonRow.add(Box.createVerticalStrut(1)); //a vertical in an X_AXIS shoves it all to the other side
@@ -137,7 +144,7 @@ class Welcome implements ManagedWindow {
 
         public void actionPerformed(ActionEvent e) {
             if (e.getSource() == add) {
-//                new CreateProfile(true);
+                Main.wm.addMinor(new CreateProfile(true));
             }
             if (e.getSource() == exit) {
                 System.exit(0);

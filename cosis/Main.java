@@ -16,7 +16,8 @@
 
 package cosis;
 
-import cosis.gui.SignIn;
+import cosis.gui.Welcome;
+import cosis.gui.WindowManager;
 import cosis.util.*;
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
@@ -28,13 +29,15 @@ import javax.swing.UIManager;
 public class Main {
 
     public static final boolean DEBUG = true;
-    public static final String VERSION = "1.0";
-    public static final String BUILD_DATE = "DEV TESTING BUILD";
+    public static final String VERSION = "1.0-DEV";
+    public static final String BUILD_DATE = "TESTING BUILD";
     public static final String NAME = "Cosis";
     public static final String CONTACT = "kavon.org/cosis.htm";
     public static final String[] AUTHORS = {"Kavon Farvardin"};
 
     public static boolean WIN = false, MAC = false, UNIX = false, TRAY = true;
+
+    public static final WindowManager wm = new WindowManager();
 
     /**
      * @param args ignored
@@ -72,7 +75,7 @@ public class Main {
             Errors.log(ex);
         }
 
-        new SignIn();
+        wm.setMajorWindow(new Welcome());
 
     }
 

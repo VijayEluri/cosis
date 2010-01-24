@@ -21,26 +21,23 @@ import java.util.ArrayList;
  * Manages all GUI windows.
  * @author Kavon Farvardin
  */
-class WindowManager {
+public class WindowManager {
 
-    private ManagedWindow major;
+    private ManagedWindow major = null;
     private ArrayList<ManagedWindow> minors = new ArrayList<ManagedWindow>();
-
-    WindowManager(ManagedWindow major) {
-        setMajorWindow(major);
-    }
-
-    //temp constructor
-    WindowManager() {
-
-    }
 
     /**
      * Sets another ManagedWindow as the MajorWindow
      * @param mjw
      */
-    public void setMajorWindow(ManagedWindow major) {
-        this.major = major;
+    public void setMajorWindow(ManagedWindow newMajor) {
+        if(major != null)
+            major.destroy();
+        major = newMajor;
+    }
+
+    public ManagedWindow getMajorWindow() {
+        return major;
     }
 
     /**

@@ -15,14 +15,17 @@
 
 package cosis.gui;
 
+import java.awt.Component;
+
 /**
  * @author Kavon Farvardin
  * @since 1.0
  */
-interface ManagedWindow {
+public interface ManagedWindow {
     void minimize();
     void maximize();
     void destroy();
     void display();
     void refresh();
+    Component getComponentForLocation();
 }

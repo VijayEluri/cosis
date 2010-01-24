@@ -19,6 +19,7 @@ import cosis.Main;
 import cosis.media.Picture;
 import cosis.util.Utils;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -31,7 +32,7 @@ import java.util.Arrays;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
-import javax.swing.JDialog;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
@@ -43,10 +44,9 @@ import javax.swing.SwingWorker;
  * @author Kavon Farvardin
  * @since 0.3b
  */
-class CreateProfile {
+class CreateProfile implements ManagedWindow {
 
-    private JDialog frame;
-    private Frame[] currentframes;
+    private JFrame frame;
     private JTextField nameField;
     private JPasswordField passwordField,  passwordField2;
     private JLabel error;
@@ -58,10 +58,8 @@ class CreateProfile {
      */
     public CreateProfile(boolean firstRun) {
         this.firstRun = firstRun;
-        currentframes = Frame.getFrames();
 
-        frame = new JDialog(currentframes[0], true);
-        frame.setTitle("Add a Profile");
+        frame = new JFrame("Add a Profile");
         frame.setResizable(Main.DEBUG);
         frame.setIconImage(Picture.getImageIcon("cosis.png").getImage());
 
@@ -145,11 +143,35 @@ class CreateProfile {
         panel.add(createRow);
         panel.add(Box.createVerticalStrut(10));
 
-        frame.setContentPane(panel);
-        frame.pack();
-        error.setVisible(false);
-        frame.setLocationRelativeTo(currentframes[0]);
+        frame.setContentPane(panel);       
+        
         frame.setVisible(true);
+        frame.pack();
+        frame.setLocationRelativeTo(Main.wm.getMajorWindow().getComponentForLocation());
+    }
+
+    public void minimize() {
+//        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    public void maximize() {
+//        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    public void destroy() {
+//        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    public void display() {
+//        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    public void refresh() {
+//        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    public Component getComponentForLocation() {
+        return (Component)frame;
     }
     private class QuickCreate extends KeyAdapter {
         @Override
@@ -177,11 +199,11 @@ class CreateProfile {
             try {
                 if (get()) {
                     if (firstRun) {
-                        currentframes[0].dispose();
+//                        currentframes[0].dispose();
                         frame.dispose();
 //                        new SignIn(false);
                     } else {
-                        currentframes[0].setEnabled(true);
+//                        currentframes[0].setEnabled(true);
                         frame.dispose();
                     }
                 } else {
