@@ -16,6 +16,7 @@
 
 package cosis;
 
+import cosis.fileio.FileIO;
 import cosis.gui.Welcome;
 import cosis.gui.WindowManager;
 import cosis.util.*;
@@ -35,7 +36,9 @@ public class Main {
     public static final String CONTACT = "kavon.org/cosis.htm";
     public static final String[] AUTHORS = {"Kavon Farvardin"};
 
-    public static boolean WIN = false, MAC = false, UNIX = false, TRAY = true;
+    public static boolean WIN = false,
+            MAC = false, UNIX = false,
+            TRAY = true, firstRun;
 
     public static final WindowManager wm = new WindowManager();
 
@@ -75,8 +78,13 @@ public class Main {
             Errors.log(ex);
         }
 
-        wm.setMajorWindow(new Welcome());
+        firstRun = FileIO.isFirstRun();
 
+        if(firstRun)
+            wm.setMajorWindow(new Welcome());
+        else
+            System.out.println("no");
+        
     }
 
 }

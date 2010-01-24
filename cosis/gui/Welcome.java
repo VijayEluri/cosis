@@ -52,23 +52,23 @@ public class Welcome implements ManagedWindow {
     }
 
     public void minimize() {
-//        throw new UnsupportedOperationException("Not supported yet.");
+        //no tray support yet
     }
 
     public void maximize() {
-//        throw new UnsupportedOperationException("Not supported yet.");
+        //no tray support yet
     }
 
     public void destroy() {
-//        System.out.println("Destroy from Welcome");
+        frame.dispose();
     }
 
     public void display() {
-//        System.out.println("Display from Welcome");
+        frame.setVisible(true);
     }
 
     public void refresh() {
-//        throw new UnsupportedOperationException("Not supported yet.");
+        frame.validate();
     }
 
     public Component getComponentForLocation() {
@@ -144,7 +144,7 @@ public class Welcome implements ManagedWindow {
 
         public void actionPerformed(ActionEvent e) {
             if (e.getSource() == add) {
-                Main.wm.addMinor(new CreateProfile(true));
+                Main.wm.addMinor(new CreateProfile());
             }
             if (e.getSource() == exit) {
                 System.exit(0);

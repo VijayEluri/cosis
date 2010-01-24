@@ -16,14 +16,15 @@
 package cosis.gui;
 
 import cosis.Main;
+import cosis.fileio.Profile;
 import cosis.media.Picture;
+import cosis.security.Secure;
 import cosis.util.Utils;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.Frame;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
@@ -51,14 +52,11 @@ class CreateProfile implements ManagedWindow {
     private JPasswordField passwordField,  passwordField2;
     private JLabel error;
     private JButton create;
-    private boolean firstRun;
 
     /**
      * Makes the CreateProfileGUI GUI
      */
-    public CreateProfile(boolean firstRun) {
-        this.firstRun = firstRun;
-
+    public CreateProfile() {
         frame = new JFrame("Add a Profile");
         frame.setResizable(Main.DEBUG);
         frame.setIconImage(Picture.getImageIcon("cosis.png").getImage());
@@ -124,12 +122,13 @@ class CreateProfile implements ManagedWindow {
         createRow.setLayout(new BoxLayout(createRow, BoxLayout.X_AXIS));
         error = new JLabel("***********************"); //fixes bug in Windows XP
         error.setForeground(Color.RED);
+        error.setVisible(false);
         create = new JButton("Create", Picture.getImageIcon("apply.png"));
         create.addActionListener(new ButtonListen());
 
         createRow.add(new Box.Filler(new Dimension(4, 1), //min
-                new Dimension(32, 1), //pref
-                new Dimension(500, 1))); //max
+                new Dimension(250, 1), //pref
+                new Dimension(1500, 1))); //max
         createRow.add(error);
         createRow.add(Box.createHorizontalStrut(10));
         createRow.add(create);
@@ -190,18 +189,19 @@ class CreateProfile implements ManagedWindow {
 
         @Override
         public Boolean doInBackground() {
-            return null;
-//            return ManageData.makeProfile(nameField.getText(), new String(passwordField.getPassword()));
+            return Profile.generateProfile(nameField.getText(), new String(passwordField.getPassword()), Secure.createSalt());
         }
 
         @Override
         protected void done() {
             try {
                 if (get()) {
-                    if (firstRun) {
+                    if (Main.firstRun) {
 //                        currentframes[0].dispose();
                         frame.dispose();
 //                        new SignIn(false);
+
+                        Main.firstRun = false;
                     } else {
 //                        currentframes[0].setEnabled(true);
                         frame.dispose();
@@ -231,7 +231,7 @@ class CreateProfile implements ManagedWindow {
             if (e.getSource() == create) {
                 frame.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 
-                if (areThereUtils() == false) {
+                if (thereAreErrors() == false) {
                     error.setVisible(false);
                     nameField.setEnabled(false);
                     passwordField.setEnabled(false);
@@ -250,7 +250,7 @@ class CreateProfile implements ManagedWindow {
      * @return Returns true if there is an error, false if it is error free.
      * @note I know its big and ugly, but I'm not going to rewrite somthing which works
      */
-    private boolean areThereUtils() {
+    private boolean thereAreErrors() {
         if (nameField.getText().length() < 0) { //name's length negative?
             Utils.showJLabelError(0, error);
             return true;

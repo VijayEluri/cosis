@@ -15,6 +15,36 @@ import java.util.ArrayList;
  * @author Kavon
  */
 public abstract class FileIO {
+
+    public static boolean isFirstRun() {
+        File data = new File(System.getProperty("user.dir") + "/cosis_data");
+        if (data.exists() && data.isDirectory()) {
+            if (data.canRead() && data.canWrite()) {
+                if (getUserFiles().length == 0) {
+                    return true;
+                } else {
+                    return false;
+                }
+
+            } else {
+                String message = "Insufficent directory privileges! Can read: " + data.canRead() + ", Can write: " + data.canWrite();
+                Errors.displayWarning(message);
+                Errors.log(new Exception(message + ", Directory: " + data));
+                return true;
+            }
+        } else {
+            try {
+                boolean sucessful = data.mkdir();
+                if (!sucessful)
+                    throw new SecurityException("Permission to create" + data + "denied!");
+            } catch (SecurityException ex) {
+                Errors.displayWarning(ex.toString());
+                System.exit(1);
+            }
+            return true;
+        }
+    }
+
     /**
      * Finds valid user data files.
      * @return File[] of .db8 files within the cosis folder

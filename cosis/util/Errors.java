@@ -17,6 +17,7 @@ package cosis.util;
 
 import cosis.media.Picture;
 import cosis.Main;
+import java.awt.Component;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -42,11 +43,9 @@ public abstract class Errors {
      * @param warning message to be displayed
      * @param frame the frame that will have it's AlwaysOnTop setting temporarily turned off to display the message.
      */
-    public static void displayWarning(String warning, JFrame frame) {
-        frame.setAlwaysOnTop(false);
-        JOptionPane.showMessageDialog(null, warning, "Warning! - "
+    public static void displayWarning(String warning, Component loc) {
+        JOptionPane.showMessageDialog(loc, warning, "Warning! - "
                 + Main.NAME, JOptionPane.WARNING_MESSAGE, Picture.getImageIcon("error.png"));
-        frame.setAlwaysOnTop(true);
     }
 
     /**
@@ -60,11 +59,9 @@ public abstract class Errors {
      * @param message message to be displayed
      * @param frame the frame that will have it's AlwaysOnTop setting temporarily turned off to display the message.
      */
-    public static void displayInformation(String message, JFrame frame) {
-        frame.setAlwaysOnTop(false);
-        JOptionPane.showMessageDialog(null, message, "Information - "
+    public static void displayInformation(String message, Component loc) {
+        JOptionPane.showMessageDialog(loc, message, "Information - "
                 + Main.NAME, JOptionPane.INFORMATION_MESSAGE, Picture.getImageIcon("info.png"));
-        frame.setAlwaysOnTop(true);
     }
 
     /**
