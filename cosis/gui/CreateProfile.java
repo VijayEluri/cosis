@@ -127,7 +127,7 @@ class CreateProfile implements ManagedWindow {
         create.addActionListener(new ButtonListen());
 
         createRow.add(new Box.Filler(new Dimension(4, 1), //min
-                new Dimension(250, 1), //pref
+                new Dimension(200, 1), //pref
                 new Dimension(1500, 1))); //max
         createRow.add(error);
         createRow.add(Box.createHorizontalStrut(10));
@@ -198,11 +198,12 @@ class CreateProfile implements ManagedWindow {
                 if (get()) {
                     if (Main.firstRun) {
                         Main.firstRun = false;
-                        Main.wm.destroyAll();                        
+                        Main.wm.destroyAll();
+                        Main.wm.setMajorWindow(new SignIn());
                     } else {
                         Main.wm.removeMinor(CreateProfile.this);
-                    }
-                    Main.wm.setMajorWindow(new SignIn());
+                        Main.wm.getMajorWindow().refresh();
+                    }                    
                 } else {
                     Utils.showJLabelError(11, error);
                     nameField.setEnabled(true);

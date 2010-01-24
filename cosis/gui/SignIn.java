@@ -47,7 +47,6 @@ import javax.swing.KeyStroke;
 import javax.swing.SwingWorker;
 
 /**
- *
  * @author Kavon Farvardin
  */
 public class SignIn implements ManagedWindow {
@@ -89,11 +88,39 @@ public class SignIn implements ManagedWindow {
     }
 
     public void refresh() {
-//        throw new UnsupportedOperationException("Not supported yet.");
+        panel.combomodel.removeAllElements();
+        Profile[] list = FileIO.getProfiles();
+        for(Profile p : list)
+            panel.combomodel.addElement(p);
+        frame.validate();
     }
     
     public Component getComponentForLocation() {
         return (Component)frame;
+    }
+
+    private void lookBusy(boolean busy) {
+        if(busy)
+            frame.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+        else
+            frame.setCursor(null);
+
+        error.setVisible(!busy);
+        panel.pwField.setEnabled(!busy);
+        panel.profileBox.setEnabled(!busy);
+        panel.add.setEnabled(!busy);
+        panel.remove.setEnabled(!busy);
+        panel.signin.setEnabled(!busy);
+        file.setEnabled(!busy);
+        help.setEnabled(!busy);
+    }
+
+    /**
+     * Opens a Create Profile window and then refreshes the list of profiles.
+     */
+    private void addProfile() {
+        
+
     }
 
     /**
@@ -137,18 +164,6 @@ public class SignIn implements ManagedWindow {
         menubar.add(help);
         return menubar;
     }
-    
-    private String[] getProfileNames() {
-//        String[] names = new String[profiles.length];
-//        for (int i = 0; i < profiles.length; i++) {
-//            names[i] = profiles[i].getName();
-//        }
-//        names = ManageData.mergeSort(names);
-
-//        FileIO.getProfiles()
-
-        return null;
-    }
 
     private class SignInPanel extends JPanel {
 
@@ -168,7 +183,7 @@ public class SignIn implements ManagedWindow {
             titleRow = new JPanel();
             titleRow.setLayout(new BoxLayout(titleRow, BoxLayout.X_AXIS));
             title = new JLabel("Select a Profile");
-            title.setFont(new Font(title.getFont().toString(), Font.BOLD, 16));
+            title.setFont(new Font(title.getFont().toString(), Font.PLAIN, 14));
             title.setAlignmentX(CENTER_ALIGNMENT);
             titleRow.add(title);
 
@@ -197,7 +212,7 @@ public class SignIn implements ManagedWindow {
             JPanel pwRow = new JPanel();
             pwRow.setLayout(new BoxLayout(pwRow, BoxLayout.X_AXIS));
             pwField = new JPasswordField();
-            signin = new JButton("Sign In");
+            signin = new JButton("Unlock");
 
             pwRow.add(pwField);
             pwRow.add(Box.createHorizontalStrut(10));
@@ -221,7 +236,7 @@ public class SignIn implements ManagedWindow {
 
             innerPanel.add(Box.createVerticalStrut(5));
             innerPanel.add(titleRow);
-            innerPanel.add(Box.createVerticalStrut(15));
+            innerPanel.add(Box.createVerticalStrut(10));
             innerPanel.add(profileBox);
             innerPanel.add(Box.createVerticalStrut(10));
             innerPanel.add(pwRow);
@@ -241,7 +256,7 @@ public class SignIn implements ManagedWindow {
         }
     }
 
-        private class QuickSignin extends KeyAdapter {
+    private class QuickSignin extends KeyAdapter {
         @Override
         public void keyReleased(KeyEvent e) {
             if (e.getKeyCode() == KeyEvent.VK_ENTER) {
@@ -271,7 +286,7 @@ public class SignIn implements ManagedWindow {
 //                new About();
             }
             if (e.getSource() == newProfile) {
-//                new CreateProfile(false);
+                Main.wm.addMinor(new CreateProfile());
             }
             if (e.getSource() == faq) {
 //                new FAQ();
@@ -292,24 +307,14 @@ public class SignIn implements ManagedWindow {
 
         public void actionPerformed(ActionEvent e) {
             if (e.getSource() == panel.signin) {
-                frame.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-
-                //disable the rest of the window while we do this shit
-                error.setVisible(false);
-                panel.pwField.setEnabled(false);
-                panel.profileBox.setEnabled(false);
-                panel.add.setEnabled(false);
-                panel.remove.setEnabled(false);
-                panel.signin.setEnabled(false);
-                file.setEnabled(false);
-                help.setEnabled(false);
+                lookBusy(true);
 
 //                Authenticate auth = new Authenticate(getMatchingProfile((String) panel.profileBox.getSelectedItem()));
 //                auth.execute();
-
             }
             if (e.getSource() == panel.add) {
-//                new CreateProfile(false);
+                Main.wm.addMinor(new CreateProfile());
+
             }
             if (e.getSource() == panel.remove) {
 //                new RemoveProfile(frame, getMatchingProfile((String) panel.profileBox.getSelectedItem()));
@@ -350,15 +355,7 @@ public class SignIn implements ManagedWindow {
             try {
                 Secure auth = get();
                 if (auth == null) {
-                    frame.setCursor(null);
-                    error.setVisible(true);
-                    panel.pwField.setEnabled(true);
-                    panel.profileBox.setEnabled(true);
-                    panel.add.setEnabled(true);
-                    panel.remove.setEnabled(true);
-                    panel.signin.setEnabled(true);
-                    file.setEnabled(true);
-                    help.setEnabled(true);
+                    lookBusy(false);
                     panel.pwField.setText("");
                     attempts++;
 
