@@ -31,6 +31,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.DefaultComboBoxModel;
@@ -113,14 +115,6 @@ public class SignIn implements ManagedWindow {
         panel.signin.setEnabled(!busy);
         file.setEnabled(!busy);
         help.setEnabled(!busy);
-    }
-
-    /**
-     * Opens a Create Profile window and then refreshes the list of profiles.
-     */
-    private void addProfile() {
-        
-
     }
 
     /**
@@ -284,17 +278,14 @@ public class SignIn implements ManagedWindow {
         public void actionPerformed(ActionEvent e) { //JMenuItem newProfile, faq, quit, removeProfile, about;
             if (e.getSource() == about) {
 //                new About();
-            }
-            if (e.getSource() == newProfile) {
+            } else if (e.getSource() == newProfile) {
                 Main.wm.addMinor(new CreateProfile());
-            }
-            if (e.getSource() == faq) {
+            } else if (e.getSource() == faq) {
 //                new FAQ();
-            }
-            if (e.getSource() == quit) {
-//                System.exit(0);
-            }
-            if (e.getSource() == removeProfile) {
+            } else if (e.getSource() == quit) {
+                Main.wm.destroyAll();
+                System.exit(0);
+            } else if (e.getSource() == removeProfile) {
 //                new RemoveProfile(frame, getMatchingProfile((String) panel.profileBox.getSelectedItem()));
             }
         }
@@ -309,8 +300,8 @@ public class SignIn implements ManagedWindow {
             if (e.getSource() == panel.signin) {
                 lookBusy(true);
 
-//                Authenticate auth = new Authenticate(getMatchingProfile((String) panel.profileBox.getSelectedItem()));
-//                auth.execute();
+                Authenticate auth = new Authenticate((Profile)panel.profileBox.getSelectedItem());
+                auth.execute();
             }
             if (e.getSource() == panel.add) {
                 Main.wm.addMinor(new CreateProfile());
@@ -322,22 +313,12 @@ public class SignIn implements ManagedWindow {
         }
     }
 
-    private Secure authorize(Profile profile, String password) {
-        return null;
-//        try {
-//            Secure check = new Secure(password, profile.getSalt());
-//            check.decrypt(profile.getVerification());
-//            return check;
-//        } catch (BadPaddingException ex) {
-//            Errors.log("Bad password attempt on profile -> " + profile.getName(), SignIn.class);
-//            return null;
-//        } catch (IllegalBlockSizeException ex) {
-//            Errors.log("Bad password attempt on profile -> " + profile.getName(), SignIn.class);
-//            return null;
-//        }
+    private boolean authorize(Profile profile, String password) {
+        return profile.authenticate(new Secure(new String(panel.pwField.getPassword()), profile.getSalt()));
+        
     }
 
-    private class Authenticate extends SwingWorker<Secure, Object> {
+    private class Authenticate extends SwingWorker<Boolean, Object> {
 
         private Profile user;
 
@@ -346,15 +327,16 @@ public class SignIn implements ManagedWindow {
         }
 
         @Override
-        public Secure doInBackground() {
-            return authorize(user, new String(panel.pwField.getPassword()));
+        public Boolean doInBackground() {
+            return user.authenticate(new Secure(
+                    new String(panel.pwField.getPassword()),
+                    user.getSalt()));
         }
 
         @Override
         protected void done() {
             try {
-                Secure auth = get();
-                if (auth == null) {
+                if (!get()) {
                     lookBusy(false);
                     panel.pwField.setText("");
                     attempts++;

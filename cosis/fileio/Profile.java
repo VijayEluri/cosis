@@ -83,6 +83,7 @@ public class Profile {
             if (testVerify.equals(verify)) {
                 auth = authKey;
             } else {
+                Errors.log(new SecurityException("Bad password attempt on " + file.getName()));
                 return false;
             }
 
@@ -115,7 +116,9 @@ public class Profile {
 
             return true;
         } catch (Exception ex) {
-            Errors.log(ex);
+            //I'm not logging the real stack trace because it may perhaps aid someone
+            //who is trying to figure out the real password.
+            Errors.log(new SecurityException("Bad password attempt on " + file.getName()));
             return false;
         }
     }
