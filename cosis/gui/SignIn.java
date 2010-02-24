@@ -313,11 +313,6 @@ public class SignIn implements ManagedWindow {
         }
     }
 
-    private boolean authorize(Profile profile, String password) {
-        return profile.authenticate(new Secure(new String(panel.pwField.getPassword()), profile.getSalt()));
-        
-    }
-
     private class Authenticate extends SwingWorker<Boolean, Object> {
 
         private Profile user;
@@ -348,9 +343,11 @@ public class SignIn implements ManagedWindow {
                 } else {
                     frame.setCursor(null);
                     frame.dispose();
+                    System.out.println("I would open the main window but that's not implemented yet!");
 //                    new ShowProfile(user, auth, signTray);
                 }
             } catch (Exception ignore) {
+                Errors.log(ignore);
             }
         }
     }

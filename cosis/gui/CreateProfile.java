@@ -19,6 +19,7 @@ import cosis.Main;
 import cosis.fileio.Profile;
 import cosis.media.Picture;
 import cosis.security.Secure;
+import cosis.util.Errors;
 import cosis.util.Utils;
 import java.awt.Color;
 import java.awt.Component;
@@ -216,6 +217,7 @@ class CreateProfile implements ManagedWindow {
                 }
                 frame.setCursor(null);
             } catch (Exception ignore) {
+                Errors.log(ignore);
             }
         }
     }
