@@ -24,7 +24,7 @@ import java.util.ArrayList;
 public class WindowManager {
 
     private ManagedWindow major = null;
-    private ArrayList<ManagedWindow> minors = new ArrayList<ManagedWindow>();
+    public ArrayList<ManagedWindow> minors = new ArrayList<ManagedWindow>();
 
     /**
      * Sets another ManagedWindow as the MajorWindow, destroys all
@@ -58,7 +58,6 @@ public class WindowManager {
     public void removeMinor(ManagedWindow minor) {
         for(int i = 0; i < minors.size(); i++) {
             if(minors.get(i) == minor) {
-                minor.destroy();
                 minors.remove(i);
             }
         }
@@ -86,9 +85,9 @@ public class WindowManager {
      * Destroys all minor ManagedWindows
      */
     public void destroyMinors() {
-        for(int i = 0; i < minors.size(); i++)
+        //All minors should be removing themselves from the list.
+        for(int i = 0; i < minors.size();)
             minors.get(i).destroy();
-        minors.clear();
     }
 
     /**

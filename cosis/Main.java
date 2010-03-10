@@ -45,7 +45,7 @@ public class Main {
 
     public static void main(String[] args) {
 
-        //Check the OS and Java Version. Version > 1.6 && OS != Macintosh
+        //Check the OS and Java Version. Version >= 1.6 && OS != Macintosh
         String osName = System.getProperty("os.name");
         if (osName.startsWith("Windows")) {
             WIN = true;

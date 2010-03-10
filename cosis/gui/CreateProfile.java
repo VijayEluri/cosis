@@ -61,6 +61,7 @@ class CreateProfile implements ManagedWindow {
         frame = new JFrame("Add a Profile");
         frame.setResizable(Main.DEBUG);
         frame.setIconImage(Picture.getImageIcon("cosis.png").getImage());
+        frame.addWindowListener(new WindowController(this));
 
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
@@ -159,6 +160,7 @@ class CreateProfile implements ManagedWindow {
     }
 
     public void destroy() {
+        Main.wm.removeMinor(this);
         frame.dispose();
     }
 

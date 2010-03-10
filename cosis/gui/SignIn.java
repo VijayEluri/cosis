@@ -53,7 +53,7 @@ public class SignIn implements ManagedWindow {
 
     private JFrame frame;
     private JMenu file,  help;
-    private JMenuItem newProfile,  faq,  quit,  removeProfile,  about;
+    private JMenuItem newProfile, quit,  removeProfile,  about;
     private JLabel error;
     private SignInPanel panel = new SignInPanel();
     private int attempts = 0;
@@ -139,16 +139,12 @@ public class SignIn implements ManagedWindow {
 
         help = new JMenu("Help");
         help.setMnemonic('H');
-        faq = new JMenuItem("F.A.Q.", Picture.getImageIcon("help_hint.png"));
-        faq.setMnemonic('Q');
         about = new JMenuItem("About", Picture.getImageIcon("help_about.png"));
         about.setMnemonic('A');
-        help.add(faq);
         help.add(about);
 
         MenuListener ml = new MenuListener();
         newProfile.addActionListener(ml);
-        faq.addActionListener(ml);
         quit.addActionListener(ml);
         removeProfile.addActionListener(ml);
         about.addActionListener(ml);
@@ -276,11 +272,10 @@ public class SignIn implements ManagedWindow {
 
         public void actionPerformed(ActionEvent e) { //JMenuItem newProfile, faq, quit, removeProfile, about;
             if (e.getSource() == about) {
-//                new About();
+                Main.wm.addMinor(new About());
+                System.err.println(Main.wm.minors.size());
             } else if (e.getSource() == newProfile) {
                 Main.wm.addMinor(new CreateProfile());
-            } else if (e.getSource() == faq) {
-//                new FAQ();
             } else if (e.getSource() == quit) {
                 Main.wm.destroyAll();
                 System.exit(0);
