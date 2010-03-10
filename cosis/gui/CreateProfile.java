@@ -197,9 +197,8 @@ class CreateProfile implements ManagedWindow {
         protected void done() {
             try {
                 if (get()) {
-                    if (Main.firstRun) {
-                        Main.firstRun = false;
-                        Main.wm.destroyAll();
+                    if (Main.FIRST_RUN) {
+                        Main.FIRST_RUN = false;
                         Main.wm.setMajorWindow(new SignIn());
                     } else {
                         Main.wm.removeMinor(CreateProfile.this);

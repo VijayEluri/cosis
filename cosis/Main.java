@@ -20,7 +20,7 @@ import cosis.fileio.FileIO;
 import cosis.gui.SignIn;
 import cosis.gui.Welcome;
 import cosis.gui.WindowManager;
-import cosis.util.*;
+import java.awt.SystemTray;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
@@ -35,65 +35,73 @@ public class Main {
     public static final String VERSION = "1.0-DEV";
     public static final String BUILD_DATE = "TESTING BUILD";
     public static final String NAME = "Cosis";
-    public static final String CONTACT = "kavon.org/cosis.htm";
+    public static final String CONTACT = "cosis.support@gmail.com";
+    public static final String HOMEPAGE = "kavon.org/cosis.htm";
     public static final String[] AUTHORS = {"Kavon Farvardin"};
 
-    public static boolean WIN = false,
-            MAC = false, UNIX = false,
-            TRAY = true, firstRun;
+    public static boolean WIN = false, UNIX = false, TRAY, FIRST_RUN;
 
     public static final WindowManager wm = new WindowManager();
 
-    /**
-     * @param args ignored
-     */
     public static void main(String[] args) {
-        
-        /**
-         * Determine the OS and Java Version, mostly for disabling the system tray as needed.
-         */
+
+        //Check the OS and Java Version. Version > 1.6 && OS != Macintosh
         String osName = System.getProperty("os.name");
-        if (osName.contains("Windows")) {
+        if (osName.startsWith("Windows")) {
             WIN = true;
-        } else if (osName.contains("Apple") || osName.contains("Mac") || osName.contains("OS X")) {
-            MAC = true;
+        } else if (osName.startsWith("Mac")) {
+            JOptionPane.showMessageDialog(null,
+                    "Although this is suppose to be a cross-platform program,\n" +
+                    "developing and testing for Mac OS compatibility with\n" +
+                    "Apple-restricted hardware (a PC) is too difficult and\n" +
+                    "otherwise illegal. If you'd like to help or voice your opinion,\n" +
+                    "please contact me: " + CONTACT,
+                    "Unsupported Operating System - " + Main.NAME, JOptionPane.INFORMATION_MESSAGE);
+            System.exit(0);
         } else {
             UNIX = true;
         }
 
-        double javaVersion = Double.valueOf(System.getProperty("java.specification.version"));
-
-        if (javaVersion < 1.6 && !MAC) {
-            JOptionPane.showMessageDialog(null,
-                    "Your system has an outdated version of the Java" +
-                    " Runtime Environment (" + javaVersion + ").\n" +
-                    "Please update your version to 1.6 or greater: www.java.com/getjava",
-                    "Outdated Java - " + Main.NAME, JOptionPane.INFORMATION_MESSAGE);
-            System.exit(0);
-        } else if(MAC) {
-            TRAY = false;
+        try {
+            double javaVersion = Double.parseDouble(System.getProperty("java.specification.version"));
+            if (javaVersion < 1.6) {
+                JOptionPane.showMessageDialog(null,
+                        "Your system has an outdated version of the Java"
+                        + " Runtime Environment (" + javaVersion + ").\n"
+                        + "Please update your version.",
+                        "Outdated Java - " + Main.NAME, JOptionPane.INFORMATION_MESSAGE);
+                System.exit(0);
+            }
+        } catch (NumberFormatException x) {
+            System.err.println("COSIS - VERSION CHECKING FAILED");
+            x.printStackTrace();
+            System.exit(1);
         }
 
+        /**
+         * From here on, we're on a normal OS with a proper version of Java.
+         */
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-        } catch (Exception ex) {
-            Errors.log(ex);
+        } catch (Exception x) {
+            System.err.println("COSIS - NATIVE SYSTEM THEME SET FAILED");
+            x.printStackTrace();
+            System.exit(1);
         }
 
-        firstRun = FileIO.isFirstRun();
+        TRAY = SystemTray.isSupported();
+        FIRST_RUN = FileIO.isFirstRun();
 
+        //Start the GUI
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
-                if (firstRun) {
+                if (FIRST_RUN) {
                     wm.setMajorWindow(new Welcome());
                 } else {
                     wm.setMajorWindow(new SignIn());
                 }
             }
-        });
-
-        
+        });        
     }
-
 }

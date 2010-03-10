@@ -27,12 +27,14 @@ public class WindowManager {
     private ArrayList<ManagedWindow> minors = new ArrayList<ManagedWindow>();
 
     /**
-     * Sets another ManagedWindow as the MajorWindow
+     * Sets another ManagedWindow as the MajorWindow, destroys all
      * @param mjw
      */
     public void setMajorWindow(ManagedWindow newMajor) {
         if(major != null)
             major.destroy();
+        if(minors.size() > 0)
+            destroyMinors();
         major = newMajor;
     }
 

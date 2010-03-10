@@ -61,6 +61,7 @@ public class SignIn implements ManagedWindow {
     public SignIn() {
         frame = new JFrame("Unlock Profile - " + Main.NAME + " " + Main.VERSION);
         frame.setResizable(Main.DEBUG);
+        //TODO implement a window listener so we can nicely call destroyAll() and then System.exit(0)
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.addWindowListener(new WindowController(this));
         frame.setContentPane(panel);
