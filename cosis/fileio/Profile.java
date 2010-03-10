@@ -116,9 +116,7 @@ public class Profile {
 
             return true;
         } catch (Exception ex) {
-            //I'm not logging the real stack trace because it may perhaps aid someone
-            //who is trying to figure out the real password.
-            Errors.log(new SecurityException("Bad password attempt on " + file.getName()));
+            //No point in logging this exception, it means the password was wrong
             return false;
         }
     }

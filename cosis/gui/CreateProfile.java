@@ -203,7 +203,7 @@ class CreateProfile implements ManagedWindow {
                         Main.FIRST_RUN = false;
                         Main.wm.setMajorWindow(new SignIn());
                     } else {
-                        Main.wm.removeMinor(CreateProfile.this);
+                        destroy();
                         Main.wm.getMajorWindow().refresh();
                     }                    
                 } else {
@@ -261,7 +261,7 @@ class CreateProfile implements ManagedWindow {
         } else if (nameField.getText().length() > 0 && nameField.getText().length() < 3) { //name between 0 and 3 characters?
             Utils.showJLabelError(2, error);
             return true;
-        } else if (nameField.getText().length() > 20) { //name larger than 20 characters?
+        } else if (nameField.getText().length() > 200) { //name larger than 200 characters?
             Utils.showJLabelError(3, error);
             return true;
         } else if (Utils.hasFirstLetter(nameField.getText()) == false) { //does name start with a letter A-Z or a-z?
@@ -278,7 +278,7 @@ class CreateProfile implements ManagedWindow {
             passwordField.setText("");
             passwordField2.setText("");
             return true;
-        } else if (passwordField.getPassword().length > 50) { //password over 50 characters?
+        } else if (passwordField.getPassword().length > 100) { //password over 100 characters?
             Utils.showJLabelError(6, error);
             passwordField.setText("");
             passwordField2.setText("");

@@ -87,11 +87,10 @@ public abstract class Utils {
      * @return Returns true if the String contains an illegal character, false otherwise
      */
     public static boolean hasIllegalCharacters(String s) {
-        if(s.contains("/") || s.contains("\\") || s.contains(":") || s.contains(";")
-                || s.contains("*") || s.contains("?") || s.contains("\'")
+        if(s.contains("/") || s.contains("\\") || s.contains(":")
+                || s.contains("*") || s.contains("?")
                 || s.contains("\"") || s.contains("<") || s.contains(">")
-                || s.contains(".") || s.contains("|") || s.contains("#")
-                || s.contains("(") || s.contains(")")) {
+                || s.contains("|")) {
             return true;
         } else {
             return false;

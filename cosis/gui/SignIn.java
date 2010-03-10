@@ -61,7 +61,6 @@ public class SignIn implements ManagedWindow {
     public SignIn() {
         frame = new JFrame("Unlock Profile - " + Main.NAME + " " + Main.VERSION);
         frame.setResizable(Main.DEBUG);
-        //TODO implement a window listener so we can nicely call destroyAll() and then System.exit(0)
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.addWindowListener(new WindowController(this));
         frame.setContentPane(panel);
@@ -73,19 +72,19 @@ public class SignIn implements ManagedWindow {
     }
 
     public void minimize() {
-//        throw new UnsupportedOperationException("Not supported yet.");
+//        no system tray
     }
 
     public void maximize() {
-//        throw new UnsupportedOperationException("Not supported yet.");
+//        no system tray
     }
 
     public void destroy() {
-//        throw new UnsupportedOperationException("Not supported yet.");
+        frame.dispose();
     }
 
     public void display() {
-//        throw new UnsupportedOperationException("Not supported yet.");
+        frame.setVisible(true);
     }
 
     public void refresh() {
@@ -270,10 +269,9 @@ public class SignIn implements ManagedWindow {
      */
     private class MenuListener implements ActionListener {
 
-        public void actionPerformed(ActionEvent e) { //JMenuItem newProfile, faq, quit, removeProfile, about;
+        public void actionPerformed(ActionEvent e) {
             if (e.getSource() == about) {
                 Main.wm.addMinor(new About());
-                System.err.println(Main.wm.minors.size());
             } else if (e.getSource() == newProfile) {
                 Main.wm.addMinor(new CreateProfile());
             } else if (e.getSource() == quit) {
@@ -299,7 +297,6 @@ public class SignIn implements ManagedWindow {
             }
             if (e.getSource() == panel.add) {
                 Main.wm.addMinor(new CreateProfile());
-
             }
             if (e.getSource() == panel.remove) {
 //                new RemoveProfile(frame, getMatchingProfile((String) panel.profileBox.getSelectedItem()));
@@ -330,8 +327,11 @@ public class SignIn implements ManagedWindow {
                     panel.pwField.setText("");
                     attempts++;
 
-                    if (user.isRecoveryEnabled() && (attempts % 2) != 0 && attempts >= 3) {
-                        Errors.displayInformation("Hint: " + user.getHint());
+                    if ((attempts % 2) != 0 && attempts >= 3) {
+                        Errors.log(new SecurityException(attempts + " bad password attempts on "
+                                + user.getName() + ", " + user.getFile().getName()));
+
+                        if(user.isRecoveryEnabled()) Errors.displayInformation("Hint: " + user.getHint());
                     }
                     panel.pwField.requestFocusInWindow();
                 } else {
@@ -345,7 +345,4 @@ public class SignIn implements ManagedWindow {
             }
         }
     }
-
-//hrmph
-
 }
