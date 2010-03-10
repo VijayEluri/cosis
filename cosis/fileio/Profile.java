@@ -83,8 +83,7 @@ public class Profile {
             if (testVerify.equals(verify)) {
                 auth = authKey;
             } else {
-                Errors.log(new SecurityException("Bad password attempt on " + file.getName()));
-                return false;
+                throw new SecurityException("Decryption resulted in invalid verification.");
             }
 
             backup = in.readBoolean();
