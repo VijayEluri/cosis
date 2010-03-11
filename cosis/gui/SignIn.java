@@ -41,6 +41,7 @@ import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.KeyStroke;
@@ -97,6 +98,22 @@ public class SignIn implements ManagedWindow {
     
     public Component getComponentForLocation() {
         return (Component)frame;
+    }
+
+    private void removeProfile(Profile profile) {
+        if(profile != null) {
+            String[] options = {"No", "Yes"};
+            int answer = JOptionPane.showOptionDialog(
+                    frame, "Are you sure you want to delete " + profile.getName() + "?",
+                    "Confirm - " + Main.NAME, JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE,
+                    null, options, options[0]);
+            if(answer == 1) { //1 == yes option
+                boolean success = true; //delete the profile here
+                if(success == false) {
+                    //log an error
+                }
+            }
+        }
     }
 
     private void lookBusy(boolean busy) {
@@ -278,7 +295,7 @@ public class SignIn implements ManagedWindow {
                 Main.wm.destroyAll();
                 System.exit(0);
             } else if (e.getSource() == removeProfile) {
-//                new RemoveProfile(frame, getMatchingProfile((String) panel.profileBox.getSelectedItem()));
+                removeProfile((Profile)panel.profileBox.getSelectedItem());
             }
         }
     }
@@ -299,7 +316,7 @@ public class SignIn implements ManagedWindow {
                 Main.wm.addMinor(new CreateProfile());
             }
             if (e.getSource() == panel.remove) {
-//                new RemoveProfile(frame, getMatchingProfile((String) panel.profileBox.getSelectedItem()));
+                removeProfile((Profile)panel.profileBox.getSelectedItem());
             }
         }
     }

@@ -20,6 +20,7 @@ import cosis.fileio.FileIO;
 import cosis.gui.SignIn;
 import cosis.gui.Welcome;
 import cosis.gui.WindowManager;
+import java.awt.GraphicsEnvironment;
 import java.awt.SystemTray;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
@@ -44,6 +45,13 @@ public class Main {
     public static final WindowManager wm = new WindowManager();
 
     public static void main(String[] args) {
+
+        if(GraphicsEnvironment.isHeadless()) {
+            System.out.println("Sorry, Cosis is not command-line-warrior friendly," +
+                    "\nalthough it wouldn't be hard to make a CLI interface...\n" +
+                    "shoot me an email if you want one: " + CONTACT);
+            System.exit(0);
+        }
 
         //Check the OS and Java Version. Version >= 1.6 && OS != Macintosh
         String osName = System.getProperty("os.name");
