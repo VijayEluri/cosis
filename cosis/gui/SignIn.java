@@ -31,6 +31,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.io.IOException;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.DefaultComboBoxModel;
@@ -91,8 +92,13 @@ public class SignIn implements ManagedWindow {
     public void refresh() {
         panel.combomodel.removeAllElements();
         Profile[] list = FileIO.getProfiles();
+
+        panel.signin.setEnabled(list.length == 0 ? false : true);
+        panel.remove.setEnabled(list.length == 0 ? false : true);
+
         for(Profile p : list)
             panel.combomodel.addElement(p);
+
         frame.validate();
     }
     
@@ -108,9 +114,13 @@ public class SignIn implements ManagedWindow {
                     "Confirm - " + Main.NAME, JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE,
                     null, options, options[0]);
             if(answer == 1) { //1 == yes option
-                boolean success = true; //delete the profile here
+                boolean success = profile.getFile().delete(); //delete the profile here
                 if(success == false) {
-                    //log an error
+                    Errors.log(new IOException("Failed to delete "
+                            + profile.getFile().getAbsolutePath() + " Writeable: "
+                            + profile.getFile().canWrite()));
+                } else {
+                    refresh();
                 }
             }
         }
@@ -306,10 +316,9 @@ public class SignIn implements ManagedWindow {
     private class ButtonListener implements ActionListener {
 
         public void actionPerformed(ActionEvent e) {
-            if (e.getSource() == panel.signin) {
+            if (e.getSource() == panel.signin && panel.combomodel.getSize() > 0) {
                 lookBusy(true);
-
-                Authenticate auth = new Authenticate((Profile)panel.profileBox.getSelectedItem());
+                Authenticate auth = new Authenticate((Profile) panel.profileBox.getSelectedItem());
                 auth.execute();
             }
             if (e.getSource() == panel.add) {
@@ -354,8 +363,7 @@ public class SignIn implements ManagedWindow {
                 } else {
                     frame.setCursor(null);
                     frame.dispose();
-                    System.out.println("I would open the main window but that's not implemented yet!");
-//                    new ShowProfile(user, auth, signTray);
+                    Errors.displayInformation("I would load your profile now, but that's not implemented yet! :D");
                 }
             } catch (Exception ignore) {
                 Errors.log(ignore);

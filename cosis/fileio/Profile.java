@@ -37,7 +37,7 @@ public class Profile {
     private Secure auth, newAuth = null;
 
     private String name, salt, verify, hint, path;
-    private byte[] encryptedVerification;
+    private byte[] encryptedVerification, encryptedAccounts;
 
     private boolean recovery, backup;
 
@@ -62,10 +62,20 @@ public class Profile {
             verify = in.readUTF();
             int verificationLength = in.readInt();
             encryptedVerification = readByteArray(in, verificationLength);
+
             recovery = in.readBoolean();
-            if (recovery) {
+            if (recovery)
                 hint = in.readUTF();
-            }
+
+            backup = in.readBoolean();
+            if (backup)
+                path = in.readUTF();
+
+            timeout = in.readInt();
+
+            encryptedAccounts = readByteArray(in);
+
+            in.close();
         } catch (Exception ex) {
             Errors.log(ex);
         }
@@ -85,14 +95,6 @@ public class Profile {
             } else {
                 throw new SecurityException("Decryption resulted in invalid verification.");
             }
-
-            backup = in.readBoolean();
-            if (backup) 
-                path = in.readUTF();
-            
-            timeout = in.readInt();
-
-            byte[] encryptedAccounts = readByteArray(in);
 
             String[] rawData = auth.decrypt(encryptedAccounts);
             String act_name, act_path, userID, password, notes, dateCreated, dateModified;
