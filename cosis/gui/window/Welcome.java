@@ -13,9 +13,11 @@
 //    You should have received a copy of the GNU General Public License
 //    along with Cosis.  If not, see <http://www.gnu.org/licenses/>.
 
-package cosis.gui;
+package cosis.gui.window;
 
+import cosis.gui.WindowController;
 import cosis.Main;
+import cosis.gui.ManagedWindow;
 import cosis.media.Picture;
 import java.awt.BorderLayout;
 import java.awt.Component;

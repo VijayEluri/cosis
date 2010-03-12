@@ -13,18 +13,24 @@
 //    You should have received a copy of the GNU General Public License
 //    along with Cosis.  If not, see <http://www.gnu.org/licenses/>.
 
-package cosis.fileio;
+package cosis.gui;
 
+import cosis.Main;
 import cosis.security.Secure;
 import cosis.util.Errors;
+import cosis.util.FileIO;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.io.EOFException;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.security.SecureRandom;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 
 /**
  * A profile
@@ -74,10 +80,35 @@ public class Profile {
             timeout = in.readInt();
 
             encryptedAccounts = readByteArray(in);
-
-            in.close();
+            
+        } catch(EOFException ex) {
+            int answer = JOptionPane.showConfirmDialog(null,
+                    "A file with the .db8 extension: " + file.getName()
+                    + "\nwas found in the Cosis data folder, but is"
+                    + "\ncorrupt and otherwise unreadable, delete this file?",
+                    "Unrecognized Profile Found - " + Main.NAME, JOptionPane.OK_CANCEL_OPTION);
+            if (answer == JOptionPane.OK_OPTION) {
+                try {
+                    in.close();
+                    boolean sucessful = file.delete();
+                    if (!sucessful) {
+                        Errors.log(new IOException("Failed to delete "
+                                + file.getAbsolutePath() + " Writeable: "
+                                + file.canWrite()));
+                    }
+                } catch (IOException innerEx) {
+                    Errors.log(innerEx);
+                }
+            }
+            System.exit(0);
         } catch (Exception ex) {
             Errors.log(ex);
+        } finally {
+            try {
+                in.close();
+            } catch (IOException ex) {
+                Errors.log(ex);
+            }
         }
     }
 

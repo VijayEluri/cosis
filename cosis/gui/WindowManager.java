@@ -15,6 +15,10 @@
 
 package cosis.gui;
 
+import cosis.Main;
+import cosis.util.Errors;
+import java.awt.AWTException;
+import java.awt.SystemTray;
 import java.util.ArrayList;
 
 /**
@@ -24,7 +28,22 @@ import java.util.ArrayList;
 public class WindowManager {
 
     private ManagedWindow major = null;
-    public ArrayList<ManagedWindow> minors = new ArrayList<ManagedWindow>();
+    private ArrayList<ManagedWindow> minors = new ArrayList<ManagedWindow>();
+    private SystemTray sysTray;
+
+   public WindowManager() {
+        if(Main.TRAY) {
+            try {
+                sysTray = SystemTray.getSystemTray();
+                sysTray.add(new TrayObject(sysTray.getTrayIconSize()));
+            } catch (AWTException ex) {
+                Errors.log(ex);
+            }
+
+            //more system tray related stuff.
+        }
+
+    }
 
     /**
      * Sets another ManagedWindow as the MajorWindow, destroys all

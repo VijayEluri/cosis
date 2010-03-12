@@ -15,42 +15,17 @@
 
 package cosis.gui;
 
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
+import cosis.Main;
+import cosis.media.Picture;
+import java.awt.Dimension;
+import java.awt.Image;
+import java.awt.TrayIcon;
 
-/**
- * @author Kavon Farvardin
- */
-public class WindowController extends WindowAdapter {
+class TrayObject extends TrayIcon {
 
-    ManagedWindow mw;
-
-    public WindowController(ManagedWindow mw) {
-        this.mw = mw;
-    }
-
-    @Override
-    public void windowIconified(WindowEvent e) {
-        mw.minimize();
-    }
-
-    @Override
-    public void windowDeiconified(WindowEvent e) {
-        mw.maximize();
-    }
-
-    @Override
-    public void windowClosing(WindowEvent e) {
-        mw.destroy();
-    }
-
-    @Override
-    public void windowGainedFocus(WindowEvent e) {
-        mw.refresh();
-    }
-
-    @Override
-    public void windowOpened(WindowEvent e) {
-        mw.display();
+    TrayObject(Dimension size) {
+        super(Picture.getImageIcon("cosisGIF.gif").getImage().getScaledInstance(
+                size.width, size.height, Image.SCALE_SMOOTH),
+                Main.NAME + Main.VERSION);
     }
 }

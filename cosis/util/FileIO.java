@@ -3,8 +3,9 @@
  * and open the template in the editor.
  */
 
-package cosis.fileio;
+package cosis.util;
 
+import cosis.gui.Profile;
 import cosis.util.Errors;
 import cosis.util.Utils;
 import java.io.File;

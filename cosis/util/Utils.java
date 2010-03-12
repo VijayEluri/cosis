@@ -15,7 +15,7 @@
 
 package cosis.util;
 
-import cosis.fileio.Account;
+import cosis.gui.Account;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Calendar;

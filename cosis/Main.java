@@ -16,9 +16,9 @@
 
 package cosis;
 
-import cosis.fileio.FileIO;
-import cosis.gui.SignIn;
-import cosis.gui.Welcome;
+import cosis.util.FileIO;
+import cosis.gui.window.SignIn;
+import cosis.gui.window.Welcome;
 import cosis.gui.WindowManager;
 import java.awt.GraphicsEnvironment;
 import java.awt.SystemTray;
@@ -42,7 +42,7 @@ public class Main {
 
     public static boolean WIN = false, UNIX = false, TRAY, FIRST_RUN;
 
-    public static final WindowManager wm = new WindowManager();
+    public static WindowManager wm;
 
     public static void main(String[] args) {
 
@@ -99,7 +99,7 @@ public class Main {
 
         TRAY = SystemTray.isSupported();
         FIRST_RUN = FileIO.isFirstRun();
-
+        wm = new WindowManager();
         //Start the GUI
         SwingUtilities.invokeLater(new Runnable() {
             @Override

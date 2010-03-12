@@ -13,11 +13,13 @@
 //    You should have received a copy of the GNU General Public License
 //    along with Cosis.  If not, see <http://www.gnu.org/licenses/>.
 
-package cosis.gui;
+package cosis.gui.window;
 
+import cosis.gui.WindowController;
 import cosis.Main;
-import cosis.fileio.FileIO;
-import cosis.fileio.Profile;
+import cosis.util.FileIO;
+import cosis.gui.Profile;
+import cosis.gui.ManagedWindow;
 import cosis.media.Picture;
 import cosis.security.Secure;
 import cosis.util.Errors;
@@ -108,14 +110,13 @@ public class SignIn implements ManagedWindow {
 
     private void removeProfile(Profile profile) {
         if(profile != null) {
-            String[] options = {"No", "Yes"};
-            int answer = JOptionPane.showOptionDialog(
-                    frame, "Are you sure you want to delete " + profile.getName() + "?",
-                    "Confirm - " + Main.NAME, JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE,
-                    null, options, options[0]);
-            if(answer == 1) { //1 == yes option
-                boolean success = profile.getFile().delete(); //delete the profile here
-                if(success == false) {
+            int answer = JOptionPane.showConfirmDialog(
+                    frame, "Really remove \"" + profile.getName() + "\" by deleting:\n"
+                    + profile.getFile().getAbsolutePath() + "\nfrom the filesystem?",
+                    "Confirm Profile Deletion - " + Main.NAME, JOptionPane.OK_CANCEL_OPTION);
+            if(answer == JOptionPane.OK_OPTION) {
+                boolean sucessful = profile.getFile().delete();
+                if(!sucessful) {
                     Errors.log(new IOException("Failed to delete "
                             + profile.getFile().getAbsolutePath() + " Writeable: "
                             + profile.getFile().canWrite()));

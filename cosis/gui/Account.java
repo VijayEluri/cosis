@@ -13,7 +13,7 @@
 //    You should have received a copy of the GNU General Public License
 //    along with Cosis.  If not, see <http://www.gnu.org/licenses/>.
 
-package cosis.fileio;
+package cosis.gui;
 
 import cosis.util.Errors;
 import javax.crypto.BadPaddingException;
