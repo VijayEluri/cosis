@@ -157,7 +157,7 @@ public class SignIn implements ManagedWindow {
         newProfile.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
         removeProfile = new JMenuItem("Remove Profile", Picture.getImageIcon("list_remove_user.png"));
         removeProfile.setMnemonic('R');
-        removeProfile.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
+        removeProfile.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_R, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
         quit = new JMenuItem("Exit", Picture.getImageIcon("exit.png"));
         quit.setMnemonic('E');
         file.add(newProfile);
