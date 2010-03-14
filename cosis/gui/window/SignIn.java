@@ -29,6 +29,7 @@ import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
@@ -153,10 +154,10 @@ public class SignIn implements ManagedWindow {
 
         newProfile = new JMenuItem("New Profile", Picture.getImageIcon("list_add_user.png"));
         newProfile.setMnemonic('N');
-        newProfile.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N, ActionEvent.CTRL_MASK));
+        newProfile.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
         removeProfile = new JMenuItem("Remove Profile", Picture.getImageIcon("list_remove_user.png"));
         removeProfile.setMnemonic('R');
-        removeProfile.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_R, ActionEvent.CTRL_MASK));
+        removeProfile.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
         quit = new JMenuItem("Exit", Picture.getImageIcon("exit.png"));
         quit.setMnemonic('E');
         file.add(newProfile);
