@@ -365,6 +365,7 @@ public class SignIn implements ManagedWindow {
                     frame.setCursor(null);
                     frame.dispose();
                     Errors.displayInformation("I would load your profile now, but that's not implemented yet! :D");
+                    System.exit(0);
                 }
             } catch (Exception ignore) {
                 Errors.log(ignore);
