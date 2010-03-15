@@ -19,58 +19,75 @@ import cosis.Main;
 import cosis.media.Picture;
 import java.awt.Dimension;
 import java.awt.Image;
+import java.awt.Toolkit;
 import java.awt.TrayIcon;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.util.Timer;
 import java.util.TimerTask;
 
 class TrayObject extends TrayIcon {
 
-    private final Timer timer = new Timer();
-    private boolean doubleClick = false, betweenAClick = false;
+    
 
     TrayObject(Dimension size) {
         super(Picture.getImageIcon("cosisGIF.gif").getImage().getScaledInstance(
                 size.width, size.height, Image.SCALE_SMOOTH),
-                Main.NAME + Main.VERSION);
+                Main.NAME + Main.VERSION);        
+        this.addMouseListener(new TrayListener());
+    }
 
-        MouseListener mouseListener = new MouseListener() {
+    private class TrayListener extends MouseAdapter {
 
-            public void mouseClicked(MouseEvent e) {
-                int clicks = e.getClickCount();
-                if(clicks == 2) {
-                    doubleClick = true;
-                } else if(clicks == 1 && !betweenAClick) {
-                    betweenAClick = true;
-                    timer.schedule(new TimerTask() {
+        private final Timer timer = new Timer();
+        private boolean doubleClick = false, betweenAClick = false;
 
-                        @Override
-                        public void run() {
-                            if(doubleClick) {
-                                System.out.println("Double click!");
-                                doubleClick = false;
-                            } else {
-                                System.out.println("Single click!");
-                            }
-                            betweenAClick = false;
+        @Override
+        public void mouseClicked(MouseEvent e) {
+            int clicks = e.getClickCount();
+            if (clicks == 2) {
+
+                doubleClick = true;
+
+                if(Main.wm.isHidden())
+                    Main.wm.maximizeAll();
+                else
+                    Main.wm.minimizeAll();
+
+                betweenAClick = false;
+
+            } else if (!betweenAClick && clicks == 1) {
+                betweenAClick = true;
+                long clickDelay = 350;
+
+                /**
+                 * I could grab the Windows doubleclick timout property, but
+                 * on my system it was a very long 500ms without me noticing,
+                 * and I'm a fast double cilcker. I'll have to test this on my
+                 * laptop to see what should happen here.
+                 */
+//                if (Main.WIN)
+//                    clickDelay = ((Integer) Toolkit.getDefaultToolkit().getDesktopProperty(
+//                            "awt.multiClickInterval")).longValue();
+
+                timer.schedule(new TimerTask() {
+
+                    @Override
+                    public void run() {
+                        if(!doubleClick) {
+
+                        System.out.println("Single click!");
+
+                        } else {
+                        doubleClick = false;
                         }
+                        betweenAClick = false;
+                    }
+                }, clickDelay);
 
-                    }, 275);
-
-                } else if(clicks >= 10) {
-                    TrayObject.this.displayMessage("Ouch!", "That hurts :(", MessageType.WARNING);
-                }
+            } else if (clicks >= 10) {
+                TrayObject.this.displayMessage("Ouch!", "That hurts :(", MessageType.WARNING);
             }
-
-            //I don't care about these actions.
-            public void mouseEntered(MouseEvent e) {}
-            public void mouseExited(MouseEvent e) {}
-            public void mousePressed(MouseEvent e) {}
-            public void mouseReleased(MouseEvent e) {}
-        };
-
-        this.addMouseListener(mouseListener);
-
+        }
     }
 }

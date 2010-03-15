@@ -54,11 +54,11 @@ public class Welcome implements ManagedWindow {
     }
 
     public void minimize() {
-        //no tray support yet
+        frame.setVisible(true);
     }
 
     public void maximize() {
-        //no tray support yet
+        frame.setVisible(true);
     }
 
     public void destroy() {

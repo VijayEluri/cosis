@@ -31,12 +31,12 @@ public class WindowController extends WindowAdapter {
 
     @Override
     public void windowIconified(WindowEvent e) {
-        mw.minimize();
+//        mw.minimize();
     }
 
     @Override
     public void windowDeiconified(WindowEvent e) {
-        mw.maximize();
+//        mw.maximize();
     }
 
     @Override

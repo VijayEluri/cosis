@@ -154,11 +154,11 @@ class CreateProfile implements ManagedWindow {
     }
 
     public void minimize() {
-        //no tray support yet
+        frame.setVisible(false);
     }
 
     public void maximize() {
-        //no tray support yet
+        frame.setVisible(true);
     }
 
     public void destroy() {

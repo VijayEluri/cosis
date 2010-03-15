@@ -30,6 +30,7 @@ public class WindowManager {
     private ManagedWindow major = null;
     private ArrayList<ManagedWindow> minors = new ArrayList<ManagedWindow>();
     private SystemTray sysTray;
+    private boolean hidden = false;
 
    public WindowManager() {
         if(Main.TRAY) {
@@ -89,15 +90,17 @@ public class WindowManager {
         for(ManagedWindow item : minors)
             item.minimize();
         major.minimize();
+        hidden = true;
     }
 
     /**
      * Calls maximize on all ManagedWindows
      */
     public void maximizeAll() {
-        major.maximize();
+        major.display();
         for(ManagedWindow item : minors)
-            item.maximize();
+            item.display();
+        hidden = false;
     }
 
     /**
@@ -115,5 +118,9 @@ public class WindowManager {
     public void destroyAll() {
         destroyMinors();
         major.destroy();
+    }
+
+    public boolean isHidden() {
+        return hidden;
     }
 }

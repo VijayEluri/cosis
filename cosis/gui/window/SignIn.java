@@ -77,11 +77,11 @@ public class SignIn implements ManagedWindow {
     }
 
     public void minimize() {
-//        no system tray
+        frame.setVisible(false);
     }
 
     public void maximize() {
-//        no system tray
+        frame.setVisible(true);
     }
 
     public void destroy() {
