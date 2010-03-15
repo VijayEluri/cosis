@@ -15,7 +15,7 @@
 
 package cosis.gui.window;
 
-import cosis.gui.WindowController;
+import cosis.gui.MinorWindowController;
 import cosis.Main;
 import cosis.gui.ManagedWindow;
 import cosis.media.Picture;
@@ -46,7 +46,7 @@ public class Welcome implements ManagedWindow {
         frame.setResizable(Main.DEBUG);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setContentPane(new MainPanel());
-        frame.addWindowListener(new WindowController(this));
+        frame.addWindowListener(new MinorWindowController(this));
         frame.pack();
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);

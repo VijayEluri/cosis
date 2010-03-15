@@ -15,7 +15,7 @@
 
 package cosis.gui.window;
 
-import cosis.gui.WindowController;
+import cosis.gui.MinorWindowController;
 import cosis.Main;
 import cosis.gui.ManagedWindow;
 import cosis.media.Picture;
@@ -44,7 +44,7 @@ public class About implements ManagedWindow {
         frame = new JFrame("About");
         frame.setResizable(Main.DEBUG);
         frame.setIconImage(Picture.getImageIcon("cosis.png").getImage());
-        frame.addWindowListener(new WindowController(this));
+        frame.addWindowListener(new MinorWindowController(this));
 
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));

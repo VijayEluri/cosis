@@ -15,8 +15,8 @@
 
 package cosis.gui.window;
 
-import cosis.gui.WindowController;
 import cosis.Main;
+import cosis.gui.MajorWindowController;
 import cosis.util.FileIO;
 import cosis.gui.Profile;
 import cosis.gui.ManagedWindow;
@@ -66,8 +66,7 @@ public class SignIn implements ManagedWindow {
     public SignIn() {
         frame = new JFrame("Unlock Profile - " + Main.NAME + " " + Main.VERSION);
         frame.setResizable(Main.DEBUG);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.addWindowListener(new WindowController(this));
+        frame.addWindowListener(new MajorWindowController(this));
         frame.setContentPane(panel);
         frame.setJMenuBar(makeMenuBar());
         frame.setIconImage(Picture.getImageIcon("cosis.png").getImage());

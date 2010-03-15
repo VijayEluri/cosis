@@ -24,15 +24,25 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.Timer;
 import java.util.TimerTask;
+import javax.swing.JMenuItem;
+import javax.swing.JPopupMenu;
 
 class TrayObject extends TrayIcon {
 
-    
+    private JPopupMenu popper;
 
     TrayObject(Dimension size) {
         super(Picture.getImageIcon("cosisGIF.gif").getImage().getScaledInstance(
                 size.width, size.height, Image.SCALE_SMOOTH),
-                Main.NAME + Main.VERSION);        
+                Main.NAME + Main.VERSION);
+
+        popper = new JPopupMenu();
+
+        JMenuItem exit = new JMenuItem("Exit");
+        popper.add(exit);
+
+
+
         this.addMouseListener(new TrayListener());
     }
 
@@ -44,6 +54,7 @@ class TrayObject extends TrayIcon {
         @Override
         public void mouseClicked(MouseEvent e) {
             int clicks = e.getClickCount();
+            final int x = e.getXOnScreen(), y = e.getYOnScreen();
             if (clicks == 2) {
 
                 doubleClick = true;
@@ -70,12 +81,14 @@ class TrayObject extends TrayIcon {
 //                            "awt.multiClickInterval")).longValue();
 
                 timer.schedule(new TimerTask() {
-
                     @Override
                     public void run() {
                         if(!doubleClick) {
 
-                        System.out.println("Single click!");
+                            //Looks like you'll have to write your own popup menu class...
+                            //Fuck everything
+
+                            System.out.println("one click");
 
                         } else
                         doubleClick = false;
