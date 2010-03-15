@@ -23,7 +23,6 @@ import java.awt.Component;
  */
 public interface ManagedWindow {
     void minimize();
-    void maximize();
     void destroy();
     void display();
     void refresh();

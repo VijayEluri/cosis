@@ -80,10 +80,6 @@ public class SignIn implements ManagedWindow {
         frame.setVisible(false);
     }
 
-    public void maximize() {
-        frame.setVisible(true);
-    }
-
     public void destroy() {
         frame.dispose();
     }

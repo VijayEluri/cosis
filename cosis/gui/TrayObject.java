@@ -19,7 +19,6 @@ import cosis.Main;
 import cosis.media.Picture;
 import java.awt.Dimension;
 import java.awt.Image;
-import java.awt.Toolkit;
 import java.awt.TrayIcon;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -78,9 +77,9 @@ class TrayObject extends TrayIcon {
 
                         System.out.println("Single click!");
 
-                        } else {
+                        } else
                         doubleClick = false;
-                        }
+                        
                         betweenAClick = false;
                     }
                 }, clickDelay);

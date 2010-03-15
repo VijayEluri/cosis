@@ -57,10 +57,6 @@ public class Welcome implements ManagedWindow {
         frame.setVisible(true);
     }
 
-    public void maximize() {
-        frame.setVisible(true);
-    }
-
     public void destroy() {
         frame.dispose();
     }

@@ -127,10 +127,6 @@ public class About implements ManagedWindow {
         frame.setVisible(false);
     }
 
-    public void maximize() {
-        frame.setVisible(true);
-    }
-
     public void destroy() {
         Main.wm.removeMinor(this);
         frame.dispose();

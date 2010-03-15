@@ -19,6 +19,10 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
 /**
+ * This is for minor designated windows, majors should implement their own.
+ * I know I could'ave just said defaultCloseOperation(JFrame.DISPOSE_ON_CLOSE)
+ * but this gives me flexibility in the future should something come up.
+ * 
  * @author Kavon Farvardin
  */
 public class WindowController extends WindowAdapter {
@@ -30,27 +34,7 @@ public class WindowController extends WindowAdapter {
     }
 
     @Override
-    public void windowIconified(WindowEvent e) {
-//        mw.minimize();
-    }
-
-    @Override
-    public void windowDeiconified(WindowEvent e) {
-//        mw.maximize();
-    }
-
-    @Override
     public void windowClosing(WindowEvent e) {
         mw.destroy();
-    }
-
-    @Override
-    public void windowGainedFocus(WindowEvent e) {
-        mw.refresh();
-    }
-
-    @Override
-    public void windowOpened(WindowEvent e) {
-        mw.display();
     }
 }
