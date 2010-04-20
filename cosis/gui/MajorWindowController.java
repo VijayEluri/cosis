@@ -32,6 +32,12 @@ public class MajorWindowController extends WindowAdapter {
 
     @Override
     public void windowClosing(WindowEvent e) {
-        Main.wm.minimizeAll();
+
+        if(Main.TRAY) {
+            Main.wm.minimizeAll();
+        } else {
+            Main.wm.destroyAll();
+            System.exit(0);
+        }
     }
 }

@@ -40,7 +40,7 @@ public class Main {
     public static final String HOMEPAGE = "kavon.org/cosis.htm";
     public static final String[] AUTHORS = {"Kavon Farvardin"};
 
-    public static boolean WIN = false, UNIX = false, TRAY, FIRST_RUN;
+    public static boolean WIN = false, MAC = false, UNIX = false, TRAY, FIRST_RUN;
 
     public static WindowManager wm;
 
@@ -58,21 +58,14 @@ public class Main {
         if (osName.startsWith("Windows")) {
             WIN = true;
         } else if (osName.startsWith("Mac")) {
-            JOptionPane.showMessageDialog(null,
-                    "Although this is suppose to be a cross-platform program,\n" +
-                    "developing and testing for Mac OS compatibility with\n" +
-                    "Apple-restricted hardware (a PC) is too difficult and\n" +
-                    "otherwise illegal. If you'd like to help or voice your opinion,\n" +
-                    "please contact me: " + CONTACT,
-                    "Unsupported Operating System - " + Main.NAME, JOptionPane.INFORMATION_MESSAGE);
-            System.exit(0);
+            MAC = true;
         } else {
             UNIX = true;
         }
 
         try {
             double javaVersion = Double.parseDouble(System.getProperty("java.specification.version"));
-            if (javaVersion < 1.6) {
+            if (javaVersion < 1.5) {
                 JOptionPane.showMessageDialog(null,
                         "Your system has an outdated version of the Java"
                         + " Runtime Environment (" + javaVersion + ").\n"
