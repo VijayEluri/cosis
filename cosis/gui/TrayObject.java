@@ -19,6 +19,7 @@ import cosis.Main;
 import cosis.media.Picture;
 import java.awt.Dimension;
 import java.awt.Image;
+import java.awt.Toolkit;
 import java.awt.TrayIcon;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -57,7 +58,7 @@ class TrayObject extends TrayIcon {
 
             } else if (!betweenAClick && clicks == 1) {
                 betweenAClick = true;
-                long clickDelay = 350;
+                long clickDelay = 450;
 
                 /**
                  * I could grab the Windows doubleclick timout property, but
@@ -65,9 +66,9 @@ class TrayObject extends TrayIcon {
                  * and I'm a fast double cilcker. I'll have to test this on my
                  * laptop to see what should happen here.
                  */
-//                if (Main.WIN)
-//                    clickDelay = ((Integer) Toolkit.getDefaultToolkit().getDesktopProperty(
-//                            "awt.multiClickInterval")).longValue();
+                if (Main.WIN)
+                    clickDelay = ((Integer) Toolkit.getDefaultToolkit().getDesktopProperty(
+                            "awt.multiClickInterval")).longValue();
 
                 timer.schedule(new TimerTask() {
                     @Override
@@ -77,7 +78,7 @@ class TrayObject extends TrayIcon {
                             //Looks like you'll have to write your own popup menu class...
                             //Fuck everything
 
-                            System.out.println("one click");
+                            System.out.println("Display Popup Menu!");
 
                         } else
                         doubleClick = false;
