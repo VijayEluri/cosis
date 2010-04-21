@@ -10,13 +10,10 @@ Information Securely.
 Current Features
 ****************
 - Easy to use interface
-- Cross-platform compatibility @
+- Cross-platform compatibility
 - Capable of supporting multiple users
 - Automated data backup to prevent loss of information
 - Strong 128-bit AES encryption
-
-@ erm... except Mac because I can't test for that platform and I'd
-	rather not have something shitty for the Apple folks.
 
 Upcoming Features
 *****************
