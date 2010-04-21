@@ -1,7 +1,1 @@
-Manifest-Version: 1.0
-Ant-Version: Apache Ant 1.7.1
-Created-By: 16.0-b13 (Sun Microsystems Inc.)
 Main-Class: cosis.Main
-Class-Path: 
-SplashScreen-Image: cosis/splash.png
-

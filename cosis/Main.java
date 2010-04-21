@@ -21,7 +21,6 @@ import cosis.gui.window.SignIn;
 import cosis.gui.window.Welcome;
 import cosis.gui.WindowManager;
 import java.awt.GraphicsEnvironment;
-import java.awt.SystemTray;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
@@ -33,14 +32,14 @@ import javax.swing.UIManager;
 public class Main {
 
     public static final boolean DEBUG = true;
-    public static final String VERSION = "1.0-DEV";
+    public static final String VERSION = "1.0-DEV-MAC";
     public static final String BUILD_DATE = "TESTING BUILD";
     public static final String NAME = "Cosis";
     public static final String CONTACT = "cosis.support@gmail.com";
     public static final String HOMEPAGE = "kavon.org/cosis.htm";
     public static final String[] AUTHORS = {"Kavon Farvardin"};
 
-    public static boolean WIN = false, MAC = false, UNIX = false, TRAY, FIRST_RUN;
+    public static boolean FIRST_RUN;
 
     public static WindowManager wm;
 
@@ -51,16 +50,6 @@ public class Main {
                     "\nalthough it wouldn't be hard to make a CLI interface...\n" +
                     "shoot me an email if you want one: " + CONTACT);
             System.exit(0);
-        }
-
-        //Check the OS and Java Version. Version >= 1.6 && OS != Macintosh
-        String osName = System.getProperty("os.name");
-        if (osName.startsWith("Windows")) {
-            WIN = true;
-        } else if (osName.startsWith("Mac")) {
-            MAC = true;
-        } else {
-            UNIX = true;
         }
 
         try {
@@ -80,7 +69,7 @@ public class Main {
         }
 
         /**
-         * From here on, we're on a normal OS with a proper version of Java.
+         * From here on, we're on a proper version of Java.
          */
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
@@ -89,20 +78,19 @@ public class Main {
             x.printStackTrace();
             System.exit(1);
         }
-
-        TRAY = SystemTray.isSupported();
+        
         FIRST_RUN = FileIO.isFirstRun();
         wm = new WindowManager();
         //Start the GUI
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
+//        SwingUtilities.invokeLater(new Runnable() {
+//            @Override
+//            public void run() {
                 if (FIRST_RUN) {
                     wm.setMajorWindow(new Welcome());
                 } else {
                     wm.setMajorWindow(new SignIn());
                 }
-            }
-        });        
+//            }
+//        });        
     }
 }

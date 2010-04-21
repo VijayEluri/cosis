@@ -18,7 +18,6 @@ package cosis.gui;
 import cosis.Main;
 import cosis.util.Errors;
 import java.awt.AWTException;
-import java.awt.SystemTray;
 import java.util.ArrayList;
 
 /**
@@ -29,21 +28,9 @@ public class WindowManager {
 
     private ManagedWindow major = null;
     private ArrayList<ManagedWindow> minors = new ArrayList<ManagedWindow>();
-    private SystemTray sysTray;
     private boolean hidden = false;
 
    public WindowManager() {
-        if(Main.TRAY) {
-            try {
-                sysTray = SystemTray.getSystemTray();
-                sysTray.add(new TrayObject(sysTray.getTrayIconSize()));
-            } catch (AWTException ex) {
-                Errors.log(ex);
-            }
-
-            //more system tray related stuff.
-        }
-
     }
 
     /**
