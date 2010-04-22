@@ -62,7 +62,6 @@ class CreateProfile implements ManagedWindow {
     public CreateProfile() {
         frame = new JFrame("Add a Profile");
         frame.setResizable(Main.DEBUG);
-        frame.setIconImage(Picture.getImageIcon("cosis.png").getImage());
         frame.addWindowListener(new MinorWindowController(this));
 
         JPanel panel = new JPanel();
@@ -127,7 +126,7 @@ class CreateProfile implements ManagedWindow {
         error = new JLabel("***********************"); //fixes bug in Windows XP
         error.setForeground(Color.RED);
         error.setVisible(false);
-        create = new JButton("Create", Picture.getImageIcon("apply.png"));
+        create = new JButton("Create");
         create.addActionListener(new ButtonListen());
 
         createRow.add(new Box.Filler(new Dimension(4, 1), //min

@@ -69,7 +69,6 @@ public class SignIn implements ManagedWindow {
         frame.addWindowListener(new MajorWindowController(this));
         frame.setContentPane(panel);
         frame.setJMenuBar(makeMenuBar());
-        frame.setIconImage(Picture.getImageIcon("cosis.png").getImage());
         frame.setVisible(true);
         frame.pack();
         frame.setLocationRelativeTo(null);
@@ -147,13 +146,13 @@ public class SignIn implements ManagedWindow {
         file = new JMenu("File");
         file.setMnemonic('F');
 
-        newProfile = new JMenuItem("New Profile", Picture.getImageIcon("list_add_user.png"));
+        newProfile = new JMenuItem("New Profile");
         newProfile.setMnemonic('N');
         newProfile.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
-        removeProfile = new JMenuItem("Remove Profile", Picture.getImageIcon("list_remove_user.png"));
+        removeProfile = new JMenuItem("Remove Profile");
         removeProfile.setMnemonic('R');
         removeProfile.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_R, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
-        quit = new JMenuItem("Exit", Picture.getImageIcon("exit.png"));
+        quit = new JMenuItem("Exit");
         quit.setMnemonic('E');
         file.add(newProfile);
         file.add(removeProfile);
@@ -162,7 +161,7 @@ public class SignIn implements ManagedWindow {
 
         help = new JMenu("Help");
         help.setMnemonic('H');
-        about = new JMenuItem("About", Picture.getImageIcon("help_about.png"));
+        about = new JMenuItem("About");
         about.setMnemonic('A');
         help.add(about);
 
@@ -202,8 +201,8 @@ public class SignIn implements ManagedWindow {
             //buttonRow
             buttonRow = new JPanel();
             buttonRow.setLayout(new BoxLayout(buttonRow, BoxLayout.X_AXIS));
-            add = new JButton("New Profile", Picture.getImageIcon("list_add16.png"));
-            remove = new JButton("Remove Profile", Picture.getImageIcon("list_remove16.png"));
+            add = new JButton("New Profile");
+            remove = new JButton("Remove Profile");
 
             buttonRow.add(Box.createHorizontalStrut(25));
             buttonRow.add(add);

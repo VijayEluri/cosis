@@ -43,7 +43,7 @@ public class Main {
 
     public static WindowManager wm;
 
-    public static void main(String[] args) {
+    public Main(String[] args) {
 
         if(GraphicsEnvironment.isHeadless()) {
             System.out.println("Sorry, Cosis is not command-line-warrior friendly," +
