@@ -33,7 +33,7 @@ public abstract class Utils {
 
     /**
      * @param orig String to have spaces removed
-     * @return Returns a String with no spaces, does not modify origional
+     * @return Returns a String with no spaces, does not modify original
      */
     public static String removeSpaces(String orig) {
         String modify = orig;
