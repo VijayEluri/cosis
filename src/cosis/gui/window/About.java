@@ -43,11 +43,12 @@ public class About implements ManagedWindow {
     public About() {
         frame = new JFrame("About");
         frame.setResizable(Main.DEBUG);
-        frame.setIconImage(Picture.getImageIcon("cosis.png").getImage());
+        frame.setIconImage(Picture.getImageIcon("icons/size16/help-about.png").getImage());
         frame.addWindowListener(new MinorWindowController(this));
 
-        JPanel panel = new JPanel();
-        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+        //Right Side
+        JPanel textPanel = new JPanel();
+        textPanel.setLayout(new BoxLayout(textPanel, BoxLayout.Y_AXIS));
 
         JLabel name = new JLabel(Main.NAME);
         name.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -55,7 +56,9 @@ public class About implements ManagedWindow {
         JLabel subtitle = new JLabel("a cross-platform account manager");
         subtitle.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        JLabel version = new JLabel("Version:  " + Main.VERSION);
+        JLabel version = new JLabel("Version:  " + Main.VERSION 
+                + (Main.DEBUG ? "-DEV" : ""));
+
         version.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         JLabel[] authors = new JLabel[Main.AUTHORS.length];
@@ -76,47 +79,61 @@ public class About implements ManagedWindow {
         String fontName = version.getFont().toString();
         Font regular = new Font(fontName, Font.PLAIN, 12);
 
-        panel.add(Box.createVerticalStrut(10));
+        textPanel.add(Box.createVerticalStrut(10));
 
         name.setFont(new Font(fontName, Font.BOLD, 18));
-        panel.add(name);
+        textPanel.add(name);
 
-        panel.add(Box.createVerticalStrut(2));
+        textPanel.add(Box.createVerticalStrut(2));
 
         subtitle.setFont(new Font(fontName, Font.ITALIC, 13));
-        panel.add(subtitle);
+        textPanel.add(subtitle);
 
-        panel.add(Box.createVerticalStrut(10));
+        textPanel.add(Box.createVerticalStrut(10));
 
         for (JLabel person : authors) {
             person.setFont(new Font(fontName, Font.PLAIN, 14));
-            panel.add(person);
-            panel.add(Box.createVerticalStrut(5));
+            textPanel.add(person);
+            textPanel.add(Box.createVerticalStrut(5));
         }
 
-        panel.add(Box.createVerticalStrut(5));
+        textPanel.add(Box.createVerticalStrut(5));
 
         version.setFont(regular);
-        panel.add(version);
+        textPanel.add(version);
 
-        panel.add(Box.createVerticalStrut(5));
+        textPanel.add(Box.createVerticalStrut(5));
 
         homepage.setFont(regular);
-        panel.add(homepage);
+        textPanel.add(homepage);
 
-        panel.add(Box.createVerticalStrut(5));
+        textPanel.add(Box.createVerticalStrut(5));
 
         contact.setFont(regular);
-        panel.add(contact);
+        textPanel.add(contact);
 
-        panel.add(Box.createVerticalStrut(5));
+        textPanel.add(Box.createVerticalStrut(5));
 
         build.setFont(regular);
-        panel.add(build);
+        textPanel.add(build);
 
-        panel.add(Box.createRigidArea(new Dimension(325, 10)));
+        textPanel.add(Box.createRigidArea(new Dimension(325, 10)));
+        
+        //Left Side
+        JPanel iconPanel = new JPanel();
+        iconPanel.setLayout(new BoxLayout(iconPanel,  BoxLayout.Y_AXIS));
+        
+        JLabel icon = new JLabel(Picture.getImageIcon("icons/size256/cosis.png"));
+        iconPanel.add(icon);
+        
+        JPanel mainPanel = new JPanel();
+        mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.X_AXIS));
+        
+        mainPanel.add(iconPanel);
+        mainPanel.add(Box.createHorizontalStrut(5));
+        mainPanel.add(textPanel);
 
-        frame.setContentPane(panel);
+        frame.setContentPane(mainPanel);
 
         frame.setVisible(true);
         frame.pack();

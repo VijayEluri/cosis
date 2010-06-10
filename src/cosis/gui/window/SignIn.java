@@ -29,6 +29,7 @@ import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.Frame;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -39,6 +40,7 @@ import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -64,15 +66,17 @@ public class SignIn implements ManagedWindow {
     private int attempts = 0;
 
     public SignIn() {
-        frame = new JFrame("Unlock Profile - " + Main.NAME + " " + Main.VERSION);
+        frame = new JFrame("Login - " + Main.NAME);
         frame.setResizable(Main.DEBUG);
         frame.addWindowListener(new MajorWindowController(this));
         frame.setContentPane(panel);
         frame.setJMenuBar(makeMenuBar());
-        frame.setIconImage(Picture.getImageIcon("cosis.png").getImage());
+        frame.setIconImage(Picture.getImageIcon("icons/size32/cosis.png").getImage());
         frame.setVisible(true);
         frame.pack();
         frame.setLocationRelativeTo(null);
+
+        panel.pwField.requestFocus();
     }
 
     public void minimize() {
@@ -85,14 +89,25 @@ public class SignIn implements ManagedWindow {
 
     public void display() {
         frame.setVisible(true);
+        frame.setExtendedState(Frame.NORMAL);
     }
 
     public void refresh() {
         panel.combomodel.removeAllElements();
         Profile[] list = FileIO.getProfiles();
 
-        panel.signin.setEnabled(list.length == 0 ? false : true);
-        panel.remove.setEnabled(list.length == 0 ? false : true);
+        boolean listNotEmpty = !(list.length == 0);
+        panel.signin.setEnabled(listNotEmpty);
+        panel.remove.setEnabled(listNotEmpty);
+        panel.publicCheck.setEnabled(listNotEmpty);
+        panel.profileBox.setEnabled(listNotEmpty);
+        panel.pwField.setEnabled(listNotEmpty);
+        if(listNotEmpty) {
+            panel.title.setText("Please login to continue");
+        } else {
+            panel.title.setText("Add a profile");
+            panel.add.requestFocus();
+        }
 
         for(Profile p : list)
             panel.combomodel.addElement(p);
@@ -124,10 +139,13 @@ public class SignIn implements ManagedWindow {
     }
 
     private void lookBusy(boolean busy) {
-        if(busy)
+        if(busy) {
             frame.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-        else
+            panel.title.setText("Processing...");
+        } else {
             frame.setCursor(null);
+            panel.title.setText("Please login to continue");
+        }
 
         error.setVisible(!busy);
         panel.pwField.setEnabled(!busy);
@@ -135,6 +153,7 @@ public class SignIn implements ManagedWindow {
         panel.add.setEnabled(!busy);
         panel.remove.setEnabled(!busy);
         panel.signin.setEnabled(!busy);
+        panel.publicCheck.setEnabled(!busy);
         file.setEnabled(!busy);
         help.setEnabled(!busy);
     }
@@ -147,14 +166,15 @@ public class SignIn implements ManagedWindow {
         file = new JMenu("File");
         file.setMnemonic('F');
 
-        newProfile = new JMenuItem("New Profile", Picture.getImageIcon("list_add_user.png"));
+        newProfile = new JMenuItem("New Profile", Picture.getImageIcon("icons/size16/new.png"));
         newProfile.setMnemonic('N');
         newProfile.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
-        removeProfile = new JMenuItem("Remove Profile", Picture.getImageIcon("list_remove_user.png"));
+        removeProfile = new JMenuItem("Remove Profile", Picture.getImageIcon("icons/size16/delete.png"));
         removeProfile.setMnemonic('R');
         removeProfile.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_R, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
-        quit = new JMenuItem("Exit", Picture.getImageIcon("exit.png"));
+        quit = new JMenuItem("Exit", Picture.getImageIcon("icons/size16/exit.png"));
         quit.setMnemonic('E');
+        quit.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Q, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
         file.add(newProfile);
         file.add(removeProfile);
         file.addSeparator();
@@ -162,7 +182,7 @@ public class SignIn implements ManagedWindow {
 
         help = new JMenu("Help");
         help.setMnemonic('H');
-        about = new JMenuItem("About", Picture.getImageIcon("help_about.png"));
+        about = new JMenuItem("About", Picture.getImageIcon("icons/size16/help-about.png"));
         about.setMnemonic('A');
         help.add(about);
 
@@ -183,6 +203,7 @@ public class SignIn implements ManagedWindow {
         JPanel titleRow, buttonRow;
         JButton add, remove, signin;
         JComboBox profileBox;
+        JCheckBox publicCheck;
         JPasswordField pwField;
         DefaultComboBoxModel combomodel;
 
@@ -194,22 +215,11 @@ public class SignIn implements ManagedWindow {
             //title
             titleRow = new JPanel();
             titleRow.setLayout(new BoxLayout(titleRow, BoxLayout.X_AXIS));
-            title = new JLabel("Select a Profile");
+            title = new JLabel("Please login to continue");
             title.setFont(new Font(title.getFont().toString(), Font.PLAIN, 14));
             title.setAlignmentX(CENTER_ALIGNMENT);
             titleRow.add(title);
 
-            //buttonRow
-            buttonRow = new JPanel();
-            buttonRow.setLayout(new BoxLayout(buttonRow, BoxLayout.X_AXIS));
-            add = new JButton("New Profile", Picture.getImageIcon("list_add16.png"));
-            remove = new JButton("Remove Profile", Picture.getImageIcon("list_remove16.png"));
-
-            buttonRow.add(Box.createHorizontalStrut(25));
-            buttonRow.add(add);
-            buttonRow.add(Box.createHorizontalStrut(10));
-            buttonRow.add(remove);
-            buttonRow.add(Box.createHorizontalStrut(25));
 
             //comboRow
             JPanel comboRow = new JPanel();
@@ -224,11 +234,30 @@ public class SignIn implements ManagedWindow {
             JPanel pwRow = new JPanel();
             pwRow.setLayout(new BoxLayout(pwRow, BoxLayout.X_AXIS));
             pwField = new JPasswordField();
-            signin = new JButton("Unlock");
+            signin = new JButton("Login");
 
             pwRow.add(pwField);
             pwRow.add(Box.createHorizontalStrut(10));
             pwRow.add(signin);
+
+            //public question
+            JPanel pubRow = new JPanel();
+            pubRow.setLayout(new BoxLayout(pubRow, BoxLayout.X_AXIS));
+            publicCheck = new JCheckBox("Hide any visible passwords");
+            pubRow.add(publicCheck);
+
+
+            //buttonRow
+            buttonRow = new JPanel();
+            buttonRow.setLayout(new BoxLayout(buttonRow, BoxLayout.X_AXIS));
+            add = new JButton("New Profile", Picture.getImageIcon("icons/size16/list-add.png"));
+            remove = new JButton("Remove Profile", Picture.getImageIcon("icons/size16/list-remove.png"));
+
+            buttonRow.add(Box.createHorizontalStrut(25));
+            buttonRow.add(add);
+            buttonRow.add(Box.createHorizontalStrut(10));
+            buttonRow.add(remove);
+            buttonRow.add(Box.createHorizontalStrut(25));
 
             ButtonListener bl = new ButtonListener();
             signin.addActionListener(bl);
@@ -240,7 +269,7 @@ public class SignIn implements ManagedWindow {
             ProfileChangeListener cl = new ProfileChangeListener();
             profileBox.addActionListener(cl);
 
-            error = new JLabel("Incorrect password, please try again.");
+            error = new JLabel("Incorrect password, please try again");
             error.setForeground(Color.RED);
             error.setAlignmentX(CENTER_ALIGNMENT);
             error.setVisible(false);
@@ -252,6 +281,8 @@ public class SignIn implements ManagedWindow {
             innerPanel.add(profileBox);
             innerPanel.add(Box.createVerticalStrut(10));
             innerPanel.add(pwRow);
+            innerPanel.add(Box.createVerticalStrut(5));
+            innerPanel.add(pubRow);
             innerPanel.add(Box.createVerticalStrut(3));
             innerPanel.add(error);
             innerPanel.add(new Box.Filler(new Dimension(1, 4), //min
@@ -272,6 +303,8 @@ public class SignIn implements ManagedWindow {
         @Override
         public void keyReleased(KeyEvent e) {
             if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+                if((e.getModifiersEx() & KeyEvent.CTRL_DOWN_MASK) == KeyEvent.CTRL_DOWN_MASK)
+                    panel.publicCheck.setSelected(true);
                 panel.signin.doClick();
             }
         }
@@ -283,6 +316,7 @@ public class SignIn implements ManagedWindow {
     private class ProfileChangeListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
             panel.pwField.setText("");
+            panel.pwField.requestFocus();
             error.setVisible(false);
             attempts = 0;
         }
@@ -358,6 +392,7 @@ public class SignIn implements ManagedWindow {
                     }
                     panel.pwField.requestFocusInWindow();
                 } else {
+                    user.setUserInPublicLocation(true);
                     frame.setCursor(null);
                     frame.dispose();
                     Errors.displayInformation("I would load your profile now, but that's not implemented yet! :D");

@@ -28,8 +28,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.security.SecureRandom;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 
 /**
@@ -45,7 +43,7 @@ public class Profile {
     private String name, salt, verify, hint, path;
     private byte[] encryptedVerification, encryptedAccounts;
 
-    private boolean recovery, backup;
+    private boolean recovery, backup, publicLocation = false;
 
     private int timeout;
 
@@ -434,6 +432,14 @@ public class Profile {
      */
     public void setHint(String hint) {
         this.hint = hint;
+    }
+
+    public void setUserInPublicLocation(boolean valid) {
+        publicLocation = valid;
+    }
+
+    public boolean isUserInPublicLocation(){
+        return publicLocation;
     }
 
     @Override

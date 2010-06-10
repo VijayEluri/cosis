@@ -42,7 +42,7 @@ public class Welcome implements ManagedWindow {
     private JFrame frame;
 
     public Welcome() {
-        frame = new JFrame(Main.NAME + " " + Main.VERSION);
+        frame = new JFrame(Main.NAME);
         frame.setResizable(Main.DEBUG);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setContentPane(new MainPanel());
@@ -50,7 +50,7 @@ public class Welcome implements ManagedWindow {
         frame.pack();
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
-        frame.setIconImage(Picture.getImageIcon("cosis.png").getImage());
+        frame.setIconImage(Picture.getImageIcon("icons/size32/cosis.png").getImage());
     }
 
     public void minimize() {
@@ -106,8 +106,8 @@ public class Welcome implements ManagedWindow {
 
             //buttonRow
             buttonRow = new JPanel();
-            add = new JButton("Add", Picture.getImageIcon("list_add16.png"));
-            exit = new JButton("Exit", Picture.getImageIcon("exit.png"));
+            add = new JButton("Add", Picture.getImageIcon("icons/size16/list-add.png"));
+            exit = new JButton("Exit", Picture.getImageIcon("icons/size16/exit.png"));
 
             buttonRow.setLayout(new BoxLayout(buttonRow, BoxLayout.X_AXIS));
             buttonRow.add(Box.createVerticalStrut(1)); //a vertical in an X_AXIS shoves it all to the other side

@@ -18,76 +18,57 @@ package cosis.gui;
 import cosis.Main;
 import cosis.media.Picture;
 import java.awt.Dimension;
-import java.awt.Image;
-import java.awt.Toolkit;
+import java.awt.MenuItem;
+import java.awt.PopupMenu;
 import java.awt.TrayIcon;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.Timer;
-import java.util.TimerTask;
 
 class TrayObject extends TrayIcon {
 
     TrayObject(Dimension size) {
-        super(Picture.getImageIcon("cosisGIF.gif").getImage().getScaledInstance(
-                size.width, size.height, Image.SCALE_SMOOTH),
-                Main.NAME + Main.VERSION);
+        super(Picture.getImageIcon("icons/size16/user-default.png").getImage(),
+                Main.NAME + " " + Main.VERSION);
 
+        //Should say "you are not logged in" etc?
 
-        this.addMouseListener(new TrayListener());
+        setPopupMenu(new TrayMenu());
+        addMouseListener(new TrayListener());
+    }
+
+    class TrayMenu extends PopupMenu {
+        MenuItem exit;
+
+        ActionListener trayListener = new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                MenuItem selectedItem = (MenuItem)e.getSource();
+                if(selectedItem == exit) {
+                    Main.wm.destroyAll();
+                    System.exit(0);
+                }
+            }
+        };
+        TrayMenu() {
+            exit = new MenuItem("Exit");
+            exit.addActionListener(trayListener);
+
+            add(exit);
+        }
+
     }
 
     private class TrayListener extends MouseAdapter {
-
-        private final Timer timer = new Timer();
-        private boolean doubleClick = false, betweenAClick = false;
-
         @Override
         public void mouseClicked(MouseEvent e) {
             int clicks = e.getClickCount();
             if (clicks == 2) {
-
-                doubleClick = true;
-
                 if(Main.wm.isHidden())
                     Main.wm.maximizeAll();
                 else
                     Main.wm.minimizeAll();
-
-                betweenAClick = false;
-
-            } else if (!betweenAClick && clicks == 1) {
-                betweenAClick = true;
-                long clickDelay = 450;
-
-                /**
-                 * I could grab the Windows doubleclick timout property, but
-                 * on my system it was a very long 500ms without me noticing,
-                 * and I'm a fast double cilcker. I'll have to test this on my
-                 * laptop to see what should happen here.
-                 */
-                if (Main.WIN)
-                    clickDelay = ((Integer) Toolkit.getDefaultToolkit().getDesktopProperty(
-                            "awt.multiClickInterval")).longValue();
-
-                timer.schedule(new TimerTask() {
-                    @Override
-                    public void run() {
-                        if(!doubleClick) {
-
-                            //Looks like you'll have to write your own popup menu class...
-                            //Fuck everything
-
-                            System.out.println("Display Popup Menu!");
-
-                        } else
-                        doubleClick = false;
-                        
-                        betweenAClick = false;
-                    }
-                }, clickDelay);
-
-            } else if (clicks >= 10) {
+            } else if ((clicks % 10) == 0) {
                 TrayObject.this.displayMessage("Ouch!", "That hurts :(", MessageType.WARNING);
             }
         }

@@ -69,7 +69,13 @@ public class Secure {
 
         for (int i = 0; i < dataString.length; i++) {
 
-            byte[] converted = dataString[i].getBytes(); //FIXME: Incorrectly converts special chars to bytes.
+            byte[] converted = null;
+            try {
+                converted = dataString[i].getBytes("UTF-8");
+            } catch (UnsupportedEncodingException ex) {
+                Errors.log(ex);
+                System.exit(1);
+            }
 
             for (int k = 0; k < converted.length; k++) {
                 //fill listByte
@@ -141,7 +147,7 @@ public class Secure {
      */
     private byte[] makeAESKey(String password, String salt) {
         try {
-            byte[] hash = Crypt.hashPassword(password, salt).getBytes("ISO-8859-1");
+            byte[] hash = Crypt.hashPassword(password, salt).getBytes("UTF-8");
             byte[] key = new byte[16];
 
             if(hash.length < 32) {
