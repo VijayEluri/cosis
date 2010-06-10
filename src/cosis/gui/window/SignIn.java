@@ -89,7 +89,7 @@ public class SignIn implements ManagedWindow {
 
     public void display() {
         frame.setVisible(true);
-        frame.setExtendedState(Frame.NORMAL);
+        if(Main.WIN) frame.setExtendedState(Frame.NORMAL);
     }
 
     public void refresh() {

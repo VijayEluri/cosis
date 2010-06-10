@@ -19,6 +19,7 @@ import cosis.gui.MinorWindowController;
 import cosis.Main;
 import cosis.gui.ManagedWindow;
 import cosis.media.Picture;
+import cosis.util.Errors;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -41,6 +42,7 @@ public class About implements ManagedWindow {
      * @since the beginning of time
      */
     public About() {
+        System.out.println(Errors.getReportingInformation());
         frame = new JFrame("About");
         frame.setResizable(Main.DEBUG);
         frame.setIconImage(Picture.getImageIcon("icons/size16/help-about.png").getImage());

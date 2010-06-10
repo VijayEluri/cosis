@@ -15,13 +15,15 @@
 
 package cosis.util;
 
-import cosis.media.Picture;
 import cosis.Main;
 import java.awt.Component;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.PrintWriter;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 
 /**
@@ -36,7 +38,7 @@ public abstract class Errors {
      */
     public static void displayWarning(String warning) {
         JOptionPane.showMessageDialog(null, warning, "Warning! - "
-                + Main.NAME, JOptionPane.WARNING_MESSAGE, Picture.getImageIcon("error.png"));
+                + Main.NAME, JOptionPane.WARNING_MESSAGE);
     }
     /**
      * @param warning message to be displayed
@@ -44,7 +46,7 @@ public abstract class Errors {
      */
     public static void displayWarning(String warning, Component loc) {
         JOptionPane.showMessageDialog(loc, warning, "Warning! - "
-                + Main.NAME, JOptionPane.WARNING_MESSAGE, Picture.getImageIcon("error.png"));
+                + Main.NAME, JOptionPane.WARNING_MESSAGE);
     }
 
     /**
@@ -52,7 +54,7 @@ public abstract class Errors {
      */
     public static void displayInformation(String message) {
         JOptionPane.showMessageDialog(null, message, "Information - "
-                + Main.NAME, JOptionPane.INFORMATION_MESSAGE, Picture.getImageIcon("info.png"));
+                + Main.NAME, JOptionPane.INFORMATION_MESSAGE);
     }
     /**
      * @param message message to be displayed
@@ -60,7 +62,7 @@ public abstract class Errors {
      */
     public static void displayInformation(String message, Component loc) {
         JOptionPane.showMessageDialog(loc, message, "Information - "
-                + Main.NAME, JOptionPane.INFORMATION_MESSAGE, Picture.getImageIcon("info.png"));
+                + Main.NAME, JOptionPane.INFORMATION_MESSAGE);
     }
 
     /**
@@ -83,10 +85,43 @@ public abstract class Errors {
             ex.printStackTrace();
     }
 
-    /**
-     * Prints information about the operating system to the log file for error reporting purposes
-     */
-    public static void logSystemInformation() {
-        throw new UnsupportedOperationException("Logging system information has not yet been implemented.");
+    private static String outputOfCommand(String cmd) throws IOException {
+        String output = "";
+        InputStream in = Runtime.getRuntime().exec(cmd).getInputStream();
+        int c;
+
+        while((c = in.read()) != -1)
+            output += (char)c;
+        in.close();
+
+        return output;
+    }
+
+    public static String getReportingInformation() {
+        String report = "";
+
+        System.out.println(System.getProperties());
+        System.out.println(System.getenv());
+
+//        try {
+//
+//
+//            if (Main.WIN) {
+//                report += "\n********** OUTPUT OF: systeminfo /FO LIST **********\n";
+//                report += outputOfCommand("systeminfo /FO LIST");
+//                report += "\n********** OUTPUT OF: tasklist **********\n";
+//                report += outputOfCommand("tasklist");
+//                report += Runtime.getRuntime().maxMemory();
+//            } else if (Main.UNIX) {
+//            } else if (Main.MAC) {
+//            }
+//
+//        } catch (IOException ex) {
+//            ex.printStackTrace();
+//            report += ex.getMessage();
+//        } finally {
+            return report;
+//        }
+
     }
 }

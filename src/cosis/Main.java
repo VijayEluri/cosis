@@ -20,6 +20,7 @@ import cosis.util.FileIO;
 import cosis.gui.window.SignIn;
 import cosis.gui.window.Welcome;
 import cosis.gui.WindowManager;
+import cosis.util.Errors;
 import java.awt.GraphicsEnvironment;
 import java.awt.SystemTray;
 import javax.swing.JOptionPane;
