@@ -42,7 +42,7 @@ public class About implements ManagedWindow {
      * @since the beginning of time
      */
     public About() {
-        System.out.println(Errors.getReportingInformation());
+        //System.out.println(Errors.getReportingInformation());
         frame = new JFrame("About");
         frame.setResizable(Main.DEBUG);
         frame.setIconImage(Picture.getImageIcon("icons/size16/help-about.png").getImage());
