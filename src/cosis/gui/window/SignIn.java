@@ -71,11 +71,11 @@ public class SignIn implements ManagedWindow {
         frame.addWindowListener(new MajorWindowController(this));
         frame.setContentPane(panel);
         frame.setJMenuBar(makeMenuBar());
-        frame.setIconImage(Picture.getImageIcon("icons/size32/cosis.png").getImage());
-        frame.setVisible(true);
+        frame.setIconImage(Picture.getImageIcon("icons/size32/cosis.png").getImage());        
         frame.pack();
         frame.setLocationRelativeTo(null);
-
+        frame.setVisible(true);
+        
         panel.pwField.requestFocus();
     }
 
@@ -392,11 +392,13 @@ public class SignIn implements ManagedWindow {
                     }
                     panel.pwField.requestFocusInWindow();
                 } else {
-                    user.setUserInPublicLocation(true);
+                    user.setUserInPublicLocation(panel.publicCheck.isSelected());
                     frame.setCursor(null);
-                    frame.dispose();
-                    Errors.displayInformation("I would load your profile now, but that's not implemented yet! :D");
-                    System.exit(0);
+                    
+                    //TODO I don't like how this window is launched with load(Profile);
+                    MainGUI m = new MainGUI();
+                    Main.wm.setMajorWindow(m);
+                    m.load(user);
                 }
             } catch (Exception ignore) {
                 Errors.log(ignore);

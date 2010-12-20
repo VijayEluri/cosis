@@ -18,6 +18,7 @@ package cosis.gui;
 import cosis.Main;
 import cosis.media.Picture;
 import java.awt.Dimension;
+import java.awt.Image;
 import java.awt.MenuItem;
 import java.awt.PopupMenu;
 import java.awt.TrayIcon;
@@ -29,7 +30,7 @@ import java.awt.event.MouseEvent;
 class TrayObject extends TrayIcon {
 
     TrayObject(Dimension size) {
-        super(Picture.getImageIcon("icons/size16/user-default.png").getImage(),
+        super(Picture.getImageIcon("icons/cosis.png").getImage().getScaledInstance(size.width, size.height, Image.SCALE_SMOOTH),
                 Main.NAME + " " + Main.VERSION);
 
         //Should say "you are not logged in" etc?
@@ -63,7 +64,7 @@ class TrayObject extends TrayIcon {
         @Override
         public void mouseClicked(MouseEvent e) {
             int clicks = e.getClickCount();
-            if (clicks == 2) {
+            if (clicks == 1) {
                 if(Main.wm.isHidden())
                     Main.wm.maximizeAll();
                 else

@@ -136,10 +136,10 @@ public class About implements ManagedWindow {
         mainPanel.add(textPanel);
 
         frame.setContentPane(mainPanel);
-
-        frame.setVisible(true);
+        
         frame.pack();
         frame.setLocationRelativeTo(Main.wm.getMajorWindow().getComponentForLocation());
+        frame.setVisible(true);
     }
 
     public void minimize() {

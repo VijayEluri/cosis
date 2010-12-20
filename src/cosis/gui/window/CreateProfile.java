@@ -147,10 +147,10 @@ class CreateProfile implements ManagedWindow {
         panel.add(Box.createVerticalStrut(10));
 
         frame.setContentPane(panel);       
-        
-        frame.setVisible(true);
+                
         frame.pack();
         frame.setLocationRelativeTo(Main.wm.getMajorWindow().getComponentForLocation());
+        frame.setVisible(true);
     }
 
     public void minimize() {

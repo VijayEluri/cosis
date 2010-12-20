@@ -48,9 +48,9 @@ public class Main {
     public static void main(String[] args) {
 
         if(GraphicsEnvironment.isHeadless()) {
-            System.out.println("Sorry, Cosis is not command-line-warrior friendly," +
+            System.out.println("\nSorry, Cosis is not command-line friendly," +
                     "\nalthough it wouldn't be hard to make a CLI interface...\n" +
-                    "shoot me an email if you want one: " + CONTACT);
+                    "send me an email if you want one: " + CONTACT + "\n");
             System.exit(0);
         }
 
