@@ -15,14 +15,6 @@
 
 package cosis.gui.window;
 
-import cosis.Main;
-import cosis.gui.MajorWindowController;
-import cosis.util.FileIO;
-import cosis.gui.Profile;
-import cosis.gui.ManagedWindow;
-import cosis.media.Picture;
-import cosis.security.Secure;
-import cosis.util.Errors;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
@@ -36,6 +28,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
+
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.DefaultComboBoxModel;
@@ -52,6 +45,15 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.KeyStroke;
 import javax.swing.SwingWorker;
+
+import cosis.Main;
+import cosis.gui.MajorWindowController;
+import cosis.gui.ManagedWindow;
+import cosis.gui.Profile;
+import cosis.media.Picture;
+import cosis.security.Secure;
+import cosis.util.Errors;
+import cosis.util.FileIO;
 
 /**
  * @author Kavon Farvardin
@@ -395,10 +397,7 @@ public class SignIn implements ManagedWindow {
                     user.setUserInPublicLocation(panel.publicCheck.isSelected());
                     frame.setCursor(null);
                     
-                    //TODO I don't like how this window is launched with load(Profile);
-                    MainGUI m = new MainGUI();
-                    Main.wm.setMajorWindow(m);
-                    m.load(user);
+                    Main.wm.setMajorWindow(new MainGUI(user));
                 }
             } catch (Exception ignore) {
                 Errors.log(ignore);

@@ -40,7 +40,7 @@ public class Profile {
     private DataInputStream in;
     private Secure auth, newAuth = null;
 
-    private String name, salt, verify, hint, path;
+    private String name, salt, verify, hint, backupPath;
     private byte[] encryptedVerification, encryptedAccounts;
 
     private boolean recovery, backup, publicLocation = false;
@@ -73,7 +73,7 @@ public class Profile {
 
             backup = in.readBoolean();
             if (backup)
-                path = in.readUTF();
+                backupPath = in.readUTF();
 
             timeout = in.readInt();
 
@@ -209,7 +209,7 @@ public class Profile {
             out.flush();
             out.close();
 
-            //if we've made it here, we're sucessful
+            //if we've made it here, we're successful
             return true;
         } catch (Exception ex) {
             Errors.log(ex);
@@ -218,12 +218,15 @@ public class Profile {
         }
     }
 
-    /**
-     * Saves this profile in its current state.
-     */
-    public void save() {
-        try {
-            DataOutputStream out = new DataOutputStream(new FileOutputStream(file));
+    public void save(boolean alsoBackup) {
+    	save(file);
+    	if(alsoBackup && backup)
+    		save(new File(backupPath));
+    }
+    
+    private void save(File location) {
+    	try {
+            DataOutputStream out = new DataOutputStream(new FileOutputStream(location));
 
             out.writeUTF(name);
             out.writeUTF(salt);
@@ -241,7 +244,7 @@ public class Profile {
 
             out.writeBoolean(backup);
             if(backup)
-                out.writeUTF(path);
+                out.writeUTF(backupPath);
 
             out.writeInt(timeout);
 
@@ -342,7 +345,7 @@ public class Profile {
      */
     public void setSecure(Secure newSecure) {
         newAuth = newSecure;
-        save();
+        save(true);
         auth = newAuth;
         newAuth = null;
         load(file);
@@ -389,7 +392,7 @@ public class Profile {
      */
     public String getBackupPath() {
         if (isBackupEnabled()) {
-            return path;
+            return backupPath;
         } else {
             return "";
         }
@@ -399,7 +402,7 @@ public class Profile {
      * @param newpath sets a new file path for data file backups
      */
     public void setBackupPath(String newpath) {
-        path = newpath;
+        backupPath = newpath;
     }
 
     /**

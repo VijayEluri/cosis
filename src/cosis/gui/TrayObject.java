@@ -64,7 +64,7 @@ class TrayObject extends TrayIcon {
         @Override
         public void mouseClicked(MouseEvent e) {
             int clicks = e.getClickCount();
-            if (clicks == 1) {
+            if (clicks == 2) { //if set to 1, a right click on windows or on linux two right clicks will trigger
                 if(Main.wm.isHidden())
                     Main.wm.maximizeAll();
                 else
