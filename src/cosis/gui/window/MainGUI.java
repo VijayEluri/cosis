@@ -29,6 +29,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
+import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.Icon;
 import javax.swing.JButton;
@@ -36,6 +37,7 @@ import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JTextField;
@@ -86,9 +88,10 @@ public class MainGUI implements ManagedWindow {
         frame.addWindowListener(new MajorWindowController(this));
         frame.setJMenuBar(makeMenuBar());
         frame.setIconImage(Picture.getImageIcon("icons/size32/cosis.png").getImage());
+        
+        displayPanel = new DisplayPanel();
 		
-		//frame.setContentPane(panel); //TODO make a content pane
-		frame.add(makeToolBar());
+		frame.setContentPane(createContentPane());
 		
 		frame.addWindowFocusListener(new WindowAdapter() {
             public void windowGainedFocus(WindowEvent e) {
@@ -100,6 +103,17 @@ public class MainGUI implements ManagedWindow {
         frame.setLocationRelativeTo(Main.wm.getMajorWindow().getComponentForLocation());
         frame.setVisible(true);
         refresh();  
+	}
+	
+	private JPanel createContentPane() {
+		JPanel pane = new JPanel();
+		pane.setLayout(new BoxLayout(pane, BoxLayout.Y_AXIS));
+		
+			pane.add(makeToolBar());
+			pane.add(displayPanel);
+		
+		
+		return pane;
 	}
 	
 	private JToolBar makeToolBar() {
@@ -259,7 +273,7 @@ public class MainGUI implements ManagedWindow {
     			//TODO copy password
     			
     		} else if(selectedObject == copyUsername) {
-    			
+
     			//TODO copy username
     			
     		} else if(selectedObject == eraseClipboard) {
