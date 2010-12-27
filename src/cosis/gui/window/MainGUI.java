@@ -64,7 +64,7 @@ public class MainGUI implements ManagedWindow {
 	
 	private JMenu file, help;
 	
-	private JPopupMenu searchMenu;
+	private JPopupMenu searchMenu, menuMenu;
 	
 	private JMenuItem quit, about, preferences, logout, backupNow;
 	
@@ -73,7 +73,7 @@ public class MainGUI implements ManagedWindow {
 	private JTextField searchBox;
 	
 	private JButton newAccount, removeAccount, editAccount, copyPassword, copyUsername,	
-						eraseClipboard, eraseSearch, search;
+						eraseClipboard, eraseSearch, search, menu;
 	
 	private final ClipboardManager clipboard = new ClipboardManager();
 	
@@ -90,7 +90,7 @@ public class MainGUI implements ManagedWindow {
 		frame.setTitle(profile.getName() + (profile.getName().endsWith("s") ? "'" : "'s") + " Credentials");
         frame.setResizable(Main.DEBUG);
         frame.addWindowListener(new MajorWindowController(this));
-        frame.setJMenuBar(makeMenuBar());
+        //frame.setJMenuBar(makeMenuBar());
         frame.setIconImage(Picture.getImageIcon("icons/size32/cosis.png").getImage());
         
         //TODO remove this testing code later
@@ -159,6 +159,7 @@ public class MainGUI implements ManagedWindow {
 		eraseClipboard = makeButton("Clear system clipboard", Picture.getImageIcon("icons/size22/clear-clipboard.png"), tl);
 		eraseSearch = makeButton("Clear search box", Picture.getImageIcon("icons/size22/searchbox-clear.png"), tl);
 		search = makeButton("Select a search filter", Picture.getImageIcon("icons/size22/searchbox-find.png"), tl);
+		menu = makeButton("Main Menu", Picture.getImageIcon("icons/size22/menu.png"), tl);
 		
 		searchBox = new JTextField(15); //TODO add keyboard shortcuts to automagically copy pw or username of top hit
 		searchBox.addKeyListener(new SearchBoxListener());
@@ -172,6 +173,8 @@ public class MainGUI implements ManagedWindow {
 		
 		searchAll.setSelected(true);
 		
+		menuMenu = makeMenuBar();
+		
 		toolbar.add(search);
 		toolbar.add(searchBox);
 		toolbar.add(eraseSearch);
@@ -183,6 +186,8 @@ public class MainGUI implements ManagedWindow {
 		toolbar.add(copyUsername);
 		toolbar.add(copyPassword);
 		toolbar.add(eraseClipboard);
+		toolbar.addSeparator();
+		toolbar.add(menu);
 		
 		return toolbar;
 	}
@@ -203,8 +208,8 @@ public class MainGUI implements ManagedWindow {
 		return button;
 	}
 	
-	private JMenuBar makeMenuBar() {
-		JMenuBar menubar = new JMenuBar();
+	private JPopupMenu makeMenuBar() {
+		JPopupMenu menubar = new JPopupMenu();
         file = new JMenu("File");
         file.setMnemonic('F');
         
@@ -322,6 +327,9 @@ public class MainGUI implements ManagedWindow {
     			
     		} else if(selectedObject == search) {
     			searchMenu.show(search, 0, search.getHeight());
+    			
+    		} else if(selectedObject == menu) {
+    			menuMenu.show(menu, 0, menu.getHeight());
     			
     		} else if(selectedObject == searchAll) {    			
     			selectPanel.setFilterMode(FilterMode.ALL);
