@@ -444,6 +444,10 @@ public class Profile {
     public boolean isUserInPublicLocation(){
         return publicLocation;
     }
+    
+    public ArrayList<Account> getAccounts() {
+    	return accounts;
+    }
 
     @Override
     public String toString() {

@@ -29,6 +29,9 @@ import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.Icon;
@@ -45,6 +48,7 @@ import javax.swing.JToolBar;
 import javax.swing.KeyStroke;
 
 import cosis.Main;
+import cosis.gui.Account;
 import cosis.gui.DisplayPanel;
 import cosis.gui.MajorWindowController;
 import cosis.gui.ManagedWindow;
@@ -73,7 +77,7 @@ public class MainGUI implements ManagedWindow {
 	
 	private final ClipboardManager clipboard = new ClipboardManager();
 	
-	private SelectionPanel selectPanel = new SelectionPanel(); //TODO remove this later
+	private SelectionPanel selectPanel; //TODO remove this later
 	
 	private DisplayPanel displayPanel;
 	
@@ -89,15 +93,32 @@ public class MainGUI implements ManagedWindow {
         frame.setJMenuBar(makeMenuBar());
         frame.setIconImage(Picture.getImageIcon("icons/size32/cosis.png").getImage());
         
-        displayPanel = new DisplayPanel();
+        //TODO remove this testing code later
+        try {
+			p.getAccounts().add(new Account("Gmail", "accounts/email.png", "", "",
+											"", "", "", false, false, p));
+		} catch (IllegalBlockSizeException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (BadPaddingException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+        
+        
+        
+        selectPanel = new SelectionPanel(p.getAccounts());
+        displayPanel = new DisplayPanel();        
 		
 		frame.setContentPane(createContentPane());
 		
-		frame.addWindowFocusListener(new WindowAdapter() {
+		frame.addWindowFocusListener(new WindowAdapter() { //TODO this might become a big problem when switching and pasting between windows and shit.
             public void windowGainedFocus(WindowEvent e) {
                 searchBox.requestFocusInWindow();
             }
         });
+		
+		
 		
 		frame.pack();
         frame.setLocationRelativeTo(Main.wm.getMajorWindow().getComponentForLocation());
@@ -106,14 +127,21 @@ public class MainGUI implements ManagedWindow {
 	}
 	
 	private JPanel createContentPane() {
-		JPanel pane = new JPanel();
-		pane.setLayout(new BoxLayout(pane, BoxLayout.Y_AXIS));
+		JPanel maxPayne = new JPanel();
+		maxPayne.setLayout(new BoxLayout(maxPayne, BoxLayout.Y_AXIS));
 		
-			pane.add(makeToolBar());
-			pane.add(displayPanel);
+		JPanel bottomPane = new JPanel();
+		bottomPane.setLayout(new BoxLayout(bottomPane, BoxLayout.X_AXIS));
+		
+			bottomPane.add(selectPanel);
+			bottomPane.add(Box.createHorizontalStrut(3));
+			bottomPane.add(displayPanel);
+		
+		maxPayne.add(makeToolBar());
+		maxPayne.add(bottomPane);
 		
 		
-		return pane;
+		return maxPayne;
 	}
 	
 	private JToolBar makeToolBar() {

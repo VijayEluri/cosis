@@ -48,12 +48,12 @@ public class DisplayPanel extends JPanel {
 		pw = new JLabel("Password:");
 		descLabel = new JLabel("Description:");
 		
-		image = new JLabel(Picture.getImageIcon("accounts/account.png"));
+		image = new JLabel(Picture.getImageIcon("accounts/email.png"));
 		
-		title = new JLabel("Title");
+		title = new JLabel("Gmail");
 		title.setFont(new Font(title.getFont().getName(), Font.BOLD, 16));
 		
-		date = new JLabel("Last Modified: 12:12pm  on  12/12/12");
+		date = new JLabel("Modified 12/26/10 @ 11:27");
 		date.setFont(new Font(date.getFont().getName(), Font.ITALIC, 10));
 		
 		idBox = new JTextField();
@@ -63,8 +63,9 @@ public class DisplayPanel extends JPanel {
 		systemTray.setFocusable(false);
 		
 		showHide = new JButton(Picture.getImageIcon("icons/size32/show.png"));
+		showHide.setFocusable(false);
 		
-		desc = new JTextArea(6, 45);
+		desc = new JTextArea(7, 26);
 		desc.setLineWrap(true);
 		desc.setWrapStyleWord(true);
 		
@@ -147,6 +148,10 @@ public class DisplayPanel extends JPanel {
 	}
 	
 	
+	//TODO good idea: when the user first logs into cosis, there's a new account
+	//waiting to be added to the account, so it'll be in Edit mode on 
+	// basic account, then they add it and that one is auto selected.
+	// after that, it's always selecting an account
 	public void setAccount(Account a) {
 		if(currentAccount == null) {
 
