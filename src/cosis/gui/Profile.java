@@ -130,6 +130,10 @@ public class Profile {
             boolean passwordHidden, favorite;
 
             accounts = new ArrayList<Account>();
+            
+            // put object reading shit here
+            
+            
             for (int i = 0; i < rawData.length; i++) {
                 act_name = rawData[i++];
                 act_path = rawData[i++];
@@ -248,6 +252,8 @@ public class Profile {
 
             out.writeInt(timeout);
 
+            
+            // put object reading stuff here
             if (newAuth != null) {
                 for (int i = 0; i < accounts.size(); i++) {
                     out.write(newAuth.encrypt(accounts.get(i).getAllData()));

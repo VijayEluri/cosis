@@ -65,7 +65,7 @@ public class SelectionPanel extends JPanel {
 			Account a = (Account)value;
 			
 			label.setText(a.getName());
-			label.setIcon(Picture.getImageIcon(a.getImagePath()));
+			label.setIcon(Picture.getImageIcon(a.getImageIcon()));
 			
 			if(isSelected) {
 				label.setBackground(Color.LIGHT_GRAY);
