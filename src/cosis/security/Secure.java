@@ -15,10 +15,10 @@
 
 package cosis.security;
 
+import cosis.gui.Account;
 import cosis.util.Errors;
 import java.io.UnsupportedEncodingException;
 import java.security.GeneralSecurityException;
-import java.util.ArrayList;
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
@@ -55,83 +55,57 @@ public class Secure {
             System.exit(1);
         }
     }
-
+    
     /**
-     * Encrypts a String[]
-     * @param input 
-     * @return an encrypted byte[].
-     * @throws IllegalBlockSizeException
-     * @throws BadPaddingException
+     * Calls doFinal from the given cipher on the given String and returns a String
+     * of that result. All versions between bytes and characters use the UTF-8 character set
      */
-    public byte[] encrypt(String[] input) throws IllegalBlockSizeException, BadPaddingException {
-        String[] dataString = input;
-        ArrayList<Byte> listByte = new ArrayList<Byte>();
-
-        for (int i = 0; i < dataString.length; i++) {
-
-            byte[] converted = null;
-            try {
-                converted = dataString[i].getBytes("UTF-8");
-            } catch (UnsupportedEncodingException ex) {
-                Errors.log(ex);
-                System.exit(1);
-            }
-
-            for (int k = 0; k < converted.length; k++) {
-                //fill listByte
-                listByte.add(converted[k]);
-            }
-            //Add a endl to seperate strings
-            listByte.add((byte) '\n');
-        }
-        //convert the list to an array
-        byte[] arrayByte = new byte[listByte.size()];
-        for (int i = 0; i < listByte.size(); i++) {
-            arrayByte[i] = listByte.get(i);
-        }
-        return encryptCipher.doFinal(arrayByte);
+    private String applyCiphertoString(String s, Cipher c) throws UnsupportedEncodingException, BadPaddingException, IllegalBlockSizeException {
+    	return new String(c.doFinal(s.getBytes("UTF-8")), "UTF-8");
     }
 
     /**
-     * Encrypts a single String
-     * @param input
-     * @return an encrypted byte[]
+     * Encrypts an Account, it modifies the parameter.
+     * 
+     * Only the name, userid, password, notes, and dateModified fields are
+     * acted upon.
+     * 
      * @throws IllegalBlockSizeException
      * @throws BadPaddingException
      */
-    public byte[] encrypt(String input) throws IllegalBlockSizeException, BadPaddingException {
-        return encrypt(new String[]{input});
-    }
+    public void encrypt(Account a) throws IllegalBlockSizeException, BadPaddingException {
+        try {            
+            a.setName(applyCiphertoString(a.getName(), encryptCipher));
+            a.setUserID(applyCiphertoString(a.getUserID(), encryptCipher));
+            a.setPassword(applyCiphertoString(a.getPassword(), encryptCipher));
+            a.setNotes(applyCiphertoString(a.getNotes(), encryptCipher));
+            a.setLastEditDate(applyCiphertoString(a.getLastEditDate(), encryptCipher));
+        } catch (UnsupportedEncodingException ex) {
+            Errors.log(ex);
+            System.exit(1);
+        }        
+    }    
 
     /**
-     * Decrypts a byte[]
-     * @param input
-     * @return a decrypted String[].
+     * Decrypts an Account, it modifies the parameter.
+     * 
+     * Only the name, userid, password, notes, and dateModified fields are
+     * acted upon.
+     * 
      * @throws IllegalBlockSizeException
      * @throws BadPaddingException
      */
-    public String[] decrypt(byte[] input) throws IllegalBlockSizeException, BadPaddingException {
-        byte[] dataByte = input;
-        ArrayList<String> listString = new ArrayList<String>();
-        String chunk = "";
-        //decrypt the big dataByte
-        dataByte = decryptCipher.doFinal(dataByte);
-
-        //reformulate the strings
-        for (int i = 0; i < dataByte.length; i++) {
-            if (dataByte[i] == (byte) '\n') {
-                listString.add(chunk);
-                chunk = "";
-            } else {
-                chunk += (char) dataByte[i];
-            }
-        }
-        //convert the list to an array, I like it this way. toArray() gives me problems
-        String[] arrayString = new String[listString.size()];
-        for (int i = 0; i < listString.size(); i++) {
-            arrayString[i] = listString.get(i);
-        }
-        return arrayString;
+    public void decrypt(Account a) throws IllegalBlockSizeException, BadPaddingException {
+    	try {            
+            a.setName(applyCiphertoString(a.getName(), decryptCipher));
+            a.setUserID(applyCiphertoString(a.getUserID(), decryptCipher));
+            a.setPassword(applyCiphertoString(a.getPassword(), decryptCipher));
+            a.setNotes(applyCiphertoString(a.getNotes(), decryptCipher));
+            a.setLastEditDate(applyCiphertoString(a.getLastEditDate(), decryptCipher));
+        } catch (UnsupportedEncodingException ex) {
+            Errors.log(ex);
+            System.exit(1);
+        } 
     }
 
     /**

@@ -17,7 +17,6 @@ package cosis.gui;
 
 import java.io.Serializable;
 
-import cosis.util.Errors;
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.swing.ImageIcon;
