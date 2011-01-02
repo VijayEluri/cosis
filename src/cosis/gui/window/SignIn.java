@@ -394,7 +394,7 @@ public class SignIn implements ManagedWindow {
                     }
                     panel.pwField.requestFocusInWindow();
                 } else {
-                    user.setUserInPublicLocation(panel.publicCheck.isSelected());
+                    //user.setUserInPublicLocation(panel.publicCheck.isSelected());
                     frame.setCursor(null);
                     
                     Main.wm.setMajorWindow(new MainGUI(user));

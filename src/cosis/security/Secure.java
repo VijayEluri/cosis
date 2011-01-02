@@ -16,6 +16,7 @@
 package cosis.security;
 
 import cosis.gui.Account;
+import cosis.util.Base64;
 import cosis.util.Errors;
 import java.io.UnsupportedEncodingException;
 import java.security.GeneralSecurityException;
@@ -25,9 +26,7 @@ import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.spec.SecretKeySpec;
 
 /**
- * Encrypter/Decrypter using AES.
- *
- * I spent a lot of time on this and I'm confident in its security.
+ * Used to encrypt and decrypt profile data.
  *
  * @author Kavon Farvardin
  */
@@ -57,11 +56,27 @@ public class Secure {
     }
     
     /**
-     * Calls doFinal from the given cipher on the given String and returns a String
-     * of that result. All versions between bytes and characters use the UTF-8 character set
+     * Encrypts a String. Added this for the verification string. Uses UTF-8 and base64 encoding
+     * @param s an encrypted string
+     * @return a new string which has been encrypted with this Secure's cipher
+     * @throws UnsupportedEncodingException
+     * @throws BadPaddingException
+     * @throws IllegalBlockSizeException
      */
-    private String applyCiphertoString(String s, Cipher c) throws UnsupportedEncodingException, BadPaddingException, IllegalBlockSizeException {
-    	return new String(c.doFinal(s.getBytes("UTF-8")), "UTF-8");
+    public String encrypt(String s) throws UnsupportedEncodingException, BadPaddingException, IllegalBlockSizeException  {
+    	return Base64.encodeToString(encryptCipher.doFinal(s.getBytes("UTF-8")), false);
+    }
+    
+    /**
+     * Decrypts a String. Added this for the verification string. Uses UTF-8 and base64 encoding
+     * @param s an decrypted string
+     * @return a new string which has been decrypted with this Secure's cipher
+     * @throws UnsupportedEncodingException
+     * @throws BadPaddingException
+     * @throws IllegalBlockSizeException
+     */
+    public String decrypt(String s) throws UnsupportedEncodingException, BadPaddingException, IllegalBlockSizeException {
+    	return new String(decryptCipher.doFinal(Base64.decodeFast(s)), "UTF-8");
     }
 
     /**
@@ -75,11 +90,11 @@ public class Secure {
      */
     public void encrypt(Account a) throws IllegalBlockSizeException, BadPaddingException {
         try {            
-            a.setName(applyCiphertoString(a.getName(), encryptCipher));
-            a.setUserID(applyCiphertoString(a.getUserID(), encryptCipher));
-            a.setPassword(applyCiphertoString(a.getPassword(), encryptCipher));
-            a.setNotes(applyCiphertoString(a.getNotes(), encryptCipher));
-            a.setLastEditDate(applyCiphertoString(a.getLastEditDate(), encryptCipher));
+            a.setName(encrypt(a.getName()));
+            a.setUserID(encrypt(a.getUserID()));
+            a.setPassword(encrypt(a.getPassword()));
+            a.setNotes(encrypt(a.getNotes()));
+            a.setLastEditDate(encrypt(a.getLastEditDate()));
         } catch (UnsupportedEncodingException ex) {
             Errors.log(ex);
             System.exit(1);
@@ -97,11 +112,11 @@ public class Secure {
      */
     public void decrypt(Account a) throws IllegalBlockSizeException, BadPaddingException {
     	try {            
-            a.setName(applyCiphertoString(a.getName(), decryptCipher));
-            a.setUserID(applyCiphertoString(a.getUserID(), decryptCipher));
-            a.setPassword(applyCiphertoString(a.getPassword(), decryptCipher));
-            a.setNotes(applyCiphertoString(a.getNotes(), decryptCipher));
-            a.setLastEditDate(applyCiphertoString(a.getLastEditDate(), decryptCipher));
+    		a.setName(decrypt(a.getName()));
+            a.setUserID(decrypt(a.getUserID()));
+            a.setPassword(decrypt(a.getPassword()));
+            a.setNotes(decrypt(a.getNotes()));
+            a.setLastEditDate(decrypt(a.getLastEditDate()));
         } catch (UnsupportedEncodingException ex) {
             Errors.log(ex);
             System.exit(1);
@@ -117,10 +132,12 @@ public class Secure {
     }
 
     /**
-     * Creates a 16 byte key for AES-128 using 32 bytes of an OpenBSD-style Blowfish password hash.
+     * Creates a 16 byte key for AES using jBCrypt, a Java implementation of OpenBSD's
+     * Blowfish password hashing code, as described in "A Future-Adaptable Password Scheme"
+     * by Niels Provos and David Mazières.
      */
     private byte[] makeAESKey(String password, String salt) {
-        try {
+        try {            
             byte[] hash = Crypt.hashPassword(password, salt).getBytes("UTF-8");
             byte[] key = new byte[16];
 
@@ -131,7 +148,7 @@ public class Secure {
             }
 
             int leftPos = 0, rightPos = 31;
-            while(leftPos < 16) {
+            while(rightPos > 15) {
                 key[leftPos] = (byte) (hash[leftPos] ^ hash[rightPos]);
                 leftPos++;
                 rightPos--;

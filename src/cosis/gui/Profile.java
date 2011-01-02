@@ -19,31 +19,30 @@ import cosis.Main;
 import cosis.security.Secure;
 import cosis.util.Errors;
 import cosis.util.FileIO;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.EOFException;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.io.ObjectInputStream;
 import java.security.SecureRandom;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
 
 /**
- * A profile
- * @author Kavon
+ * A profile containing things such as the name etc and the accounts.
+ * @author Kavon Farvardin
  */
 public class Profile {
 
     private File file;
-    private DataInputStream in;
+    
     private Secure auth, newAuth = null;
 
-    private String name, salt, verify, hint, backupPath;
-    private byte[] encryptedVerification, encryptedAccounts;
+    private String name, salt, verify, hint, backupPath, encryptedVerification;
 
-    private boolean recovery, backup, publicLocation = false;
+    private boolean recovery, backup;
 
     private int timeout;
 
@@ -58,14 +57,15 @@ public class Profile {
     }
 
     private void load(File data) {
+    	ObjectInputStream in = null;
         try {
             file = data;
-            in = new DataInputStream(new FileInputStream(file));
+            in = new ObjectInputStream(new FileInputStream(file));
+            
             name = in.readUTF();
             salt = in.readUTF();
             verify = in.readUTF();
-            int verificationLength = in.readInt();
-            encryptedVerification = readByteArray(in, verificationLength);
+            encryptedVerification = in.readUTF();
 
             recovery = in.readBoolean();
             if (recovery)
@@ -76,12 +76,17 @@ public class Profile {
                 backupPath = in.readUTF();
 
             timeout = in.readInt();
-
-            encryptedAccounts = readByteArray(in);
+            
+            accounts = new ArrayList<Account>();
+            
+            int numAccounts = in.readInt();            
+            for(int i = 0; i < numAccounts; i++) {
+            	accounts.add((Account)in.readObject());
+            }
             
         } catch(EOFException ex) {
             int answer = JOptionPane.showConfirmDialog(null,
-                    "A file with the .db8 extension: " + file.getName()
+                    "A file with the .cosis extension: " + file.getName()
                     + "\nwas found in the Cosis data folder, but is"
                     + "\ncorrupt and otherwise unreadable, delete this file?",
                     "Unrecognized Profile Found - " + Main.NAME, JOptionPane.OK_CANCEL_OPTION);
@@ -113,39 +118,20 @@ public class Profile {
     /**
      *
      * @param authKey instance of Secure which will be tested
-     * @return true if and only if the provided Secure instance can decrypt
-     * all user data correctly
+     * @return true if the provided Secure object was used to decrypt the acconuts.
      */
     public boolean authenticate(Secure authKey) {
         try {
-            String testVerify = authKey.decrypt(encryptedVerification)[0];
+            String testVerify = authKey.decrypt(encryptedVerification);
             if (testVerify.equals(verify)) {
                 auth = authKey;
             } else {
                 throw new SecurityException("Decryption resulted in invalid verification.");
             }
 
-            String[] rawData = auth.decrypt(encryptedAccounts);
-            String act_name, act_path, userID, password, notes, dateCreated, dateModified;
-            boolean passwordHidden, favorite;
-
-            accounts = new ArrayList<Account>();
-            
-            // put object reading shit here
-            
-            
-            for (int i = 0; i < rawData.length; i++) {
-                act_name = rawData[i++];
-                act_path = rawData[i++];
-                userID = rawData[i++];
-                password = rawData[i++];
-                notes = rawData[i++];
-                dateCreated = rawData[i++];
-                dateModified = rawData[i++];
-                passwordHidden = Boolean.parseBoolean(rawData[i++]);
-                favorite = Boolean.parseBoolean(rawData[i]);
-                accounts.add(new Account(act_name, act_path, userID, password,
-                        notes, dateCreated, dateModified, passwordHidden, favorite, this));
+            int numAccounts = accounts.size();
+            for(int i = 0; i < numAccounts; i++) {
+            	auth.decrypt(accounts.get(i));
             }
 
             return true;
@@ -192,23 +178,22 @@ public class Profile {
                 verification += letters[rand.nextInt(letters.length)];
             }
 
-            byte[] encryptedVerif = new Secure(password, salt).encrypt(verification);
+            String encryptedVerif = new Secure(password, salt).encrypt(verification);
 
 
             //now let's start writing to the user's file!
 
-            DataOutputStream out = new DataOutputStream(new FileOutputStream(userFile));
+            ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(userFile));
             out.writeUTF(name);
             out.writeUTF(salt);
             out.writeUTF(verification);
-
-            out.writeInt(encryptedVerif.length);
-            out.write(encryptedVerif);
+            out.writeUTF(encryptedVerif);
 
             //here we begin with preferences, these are default values
             out.writeBoolean(false);    //recovery
             out.writeBoolean(false);    //backup
             out.writeInt(15);           //timeout length in minutes
+            out.writeInt(0);			//number of accounts
 
             out.flush();
             out.close();
@@ -230,7 +215,7 @@ public class Profile {
     
     private void save(File location) {
     	try {
-            DataOutputStream out = new DataOutputStream(new FileOutputStream(location));
+            ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(location));
 
             out.writeUTF(name);
             out.writeUTF(salt);
@@ -239,8 +224,7 @@ public class Profile {
             if(newAuth != null)
                 encryptedVerification = newAuth.encrypt(verify);
 
-            out.writeInt(encryptedVerification.length);
-            out.write(encryptedVerification);
+            out.writeUTF(encryptedVerification);
 
             out.writeBoolean(recovery);
             if(recovery)
@@ -251,19 +235,13 @@ public class Profile {
                 out.writeUTF(backupPath);
 
             out.writeInt(timeout);
-
             
-            // put object reading stuff here
-            if (newAuth != null) {
-                for (int i = 0; i < accounts.size(); i++) {
-                    out.write(newAuth.encrypt(accounts.get(i).getAllData()));
-                }
-            } else {
+            int numAccounts = accounts.size();
+            
+            out.writeInt(numAccounts);
 
-                for (int i = 0; i < accounts.size(); i++) {
-                    out.write(auth.encrypt(accounts.get(i).getAllData()));
-                }
-
+            for(int i = 0; i < numAccounts; i++) {
+            	out.writeObject(accounts.get(i));
             }
 
             out.flush();
@@ -273,41 +251,6 @@ public class Profile {
 
         } catch (Exception ex) {
             Errors.log(ex);
-        }
-    }
-
-    /**
-     * Reads the DataInputStream byte by byte until the given length
-     * @param in DataInputStream
-     * @param length Number of bytes to read
-     * @return byte[] with a length == the parameter length
-     */
-    public static byte[] readByteArray(DataInputStream in, int length) {
-        try {
-            byte[] chunk = new byte[length];
-
-            for (int i = 0; i < chunk.length; i++) {
-                chunk[i] = in.readByte();
-            }
-
-            return chunk;
-        } catch (IOException ex) {
-            Errors.log(ex);
-            return new byte[0];
-        }
-    }
-
-    /**
-     * Reads the rest of the DataInputStream's bytes
-     * @param in the stream
-     * @return teh rest of the stream
-     */
-    public static byte[] readByteArray(DataInputStream in) {
-        try {
-            return readByteArray(in, in.available());
-        } catch (IOException ex) {
-            Errors.log(ex);
-            return new byte[0];
         }
     }
 
@@ -441,14 +384,6 @@ public class Profile {
      */
     public void setHint(String hint) {
         this.hint = hint;
-    }
-
-    public void setUserInPublicLocation(boolean valid) {
-        publicLocation = valid;
-    }
-
-    public boolean isUserInPublicLocation(){
-        return publicLocation;
     }
     
     public ArrayList<Account> getAccounts() {

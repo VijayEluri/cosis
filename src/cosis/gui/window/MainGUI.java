@@ -93,17 +93,17 @@ public class MainGUI implements ManagedWindow {
         //frame.setJMenuBar(makeMenuBar());
         frame.setIconImage(Picture.getImageIcon("icons/size32/cosis.png").getImage());
         
-        //TODO remove this testing code later
-        try {
-			p.getAccounts().add(new Account("Gmail", "accounts/email.png", "", "",
-											"", "", "", false, false, p));
-		} catch (IllegalBlockSizeException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (BadPaddingException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
+//        //TODO remove this testing code later
+//        try {
+//			p.getAccounts().add(new Account("Gmail", "accounts/email.png", "", "",
+//											"", "", "", false, false, p));
+//		} catch (IllegalBlockSizeException e1) {
+//			// TODO Auto-generated catch block
+//			e1.printStackTrace();
+//		} catch (BadPaddingException e1) {
+//			// TODO Auto-generated catch block
+//			e1.printStackTrace();
+//		}
         
         
         
@@ -174,20 +174,21 @@ public class MainGUI implements ManagedWindow {
 		searchAll.setSelected(true);
 		
 		menuMenu = makeMenuBar();
-		
+				
+		toolbar.add(menu);
+		toolbar.addSeparator();
+		toolbar.add(newAccount);
+		toolbar.add(removeAccount);
+		toolbar.add(editAccount);		
+		toolbar.addSeparator();
 		toolbar.add(search);
 		toolbar.add(searchBox);
 		toolbar.add(eraseSearch);
 		toolbar.addSeparator();
-		toolbar.add(newAccount);
-		toolbar.add(removeAccount);
-		toolbar.addSeparator();
-		toolbar.add(editAccount);
 		toolbar.add(copyUsername);
 		toolbar.add(copyPassword);
 		toolbar.add(eraseClipboard);
-		toolbar.addSeparator();
-		toolbar.add(menu);
+		
 		
 		return toolbar;
 	}

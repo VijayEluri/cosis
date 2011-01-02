@@ -48,7 +48,7 @@ public abstract class FileIO {
 
     /**
      * Finds valid user data files.
-     * @return File[] of .db8 files within the cosis folder
+     * @return File[] of .cosis files within the cosis folder
      */
     public static File[] getUserFiles() {
         File[] allFiles = (new File(System.getProperty("user.dir") + "/cosis_data")).listFiles();
@@ -59,8 +59,8 @@ public abstract class FileIO {
         //find a valid file
         for (int i = 0; i < allFiles.length; i++) {
             String name = allFiles[i].getName();
-            //name must be 5 characters (including extension) or more, a file (as opposed to a directory), and end in .db8
-            if (name.length() >= 5 && allFiles[i].isFile() && name.substring(name.length() - 4).equalsIgnoreCase(".db8")) {
+            //name must be 7 characters (including extension) or more, a file (as opposed to a directory), and end in .cosis
+            if (name.length() >= 7 && allFiles[i].isFile() && name.substring(name.length() - 6).equalsIgnoreCase(".cosis")) {
                 validFiles.add(allFiles[i]);
             }
         }
@@ -123,12 +123,12 @@ public abstract class FileIO {
                         count++;
                     }
                     if (count >= profiles.length) {
-                        filename += ".db8";
+                        filename += ".cosis";
                         keepgoing = false;
                     }
                 } while (keepgoing);
             } else {
-                filename += ".db8";
+                filename += ".cosis";
             }
         return filename;
     }
