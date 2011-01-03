@@ -190,7 +190,7 @@ class CreateProfile implements ManagedWindow {
 
         @Override
         public Boolean doInBackground() {
-            return Profile.generateProfile(nameField.getText(), new String(passwordField.getPassword()), Secure.createSalt());
+            return Profile.generateProfile(nameField.getText(), new String(passwordField.getPassword()), Secure.createRandomBytes());
         }
 
         @Override

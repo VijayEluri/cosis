@@ -19,11 +19,19 @@ import cosis.gui.Account;
 import cosis.util.Base64;
 import cosis.util.Errors;
 import java.io.UnsupportedEncodingException;
-import java.security.GeneralSecurityException;
+import java.security.SecureRandom;
+
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.spec.SecretKeySpec;
+import javax.crypto.SecretKey;
+import javax.crypto.SecretKeyFactory;
+import javax.crypto.spec.IvParameterSpec;
+import javax.crypto.spec.PBEKeySpec;
+
+import org.bouncycastle.jce.provider.BouncyCastleProvider;
+
+import java.security.Security;
 
 /**
  * Used to encrypt and decrypt profile data.
@@ -39,15 +47,18 @@ public class Secure {
      * @param password Password user enters to log-in
      * @param salt Random salt associated with the profile.
      */
-    public Secure(String password, String salt) {
-        try {
-            SecretKeySpec secretKey = new SecretKeySpec(makeAESKey(password, salt), "AES");
+    public Secure(char[] password, byte[] salt, byte[] iv) {
+    	try {
+    		Security.addProvider(new BouncyCastleProvider());
+               	
+        	SecretKey secretKey = SecretKeyFactory.getInstance("PBKDF2", "BC").generateSecret(new PBEKeySpec(password, salt, 12354, 32));
+            IvParameterSpec initVector = new IvParameterSpec(iv);
+            
+            encryptCipher = Cipher.getInstance("AES/CBC/PKCS5Padding", "BC");
+            encryptCipher.init(Cipher.ENCRYPT_MODE, secretKey, initVector);
 
-            encryptCipher = Cipher.getInstance("AES");
-            encryptCipher.init(Cipher.ENCRYPT_MODE, secretKey);
-
-            decryptCipher = Cipher.getInstance("AES");
-            decryptCipher.init(Cipher.DECRYPT_MODE, secretKey);
+            decryptCipher = Cipher.getInstance("AES/CBC/PKCS5Padding", "BC");
+            decryptCipher.init(Cipher.DECRYPT_MODE, secretKey, initVector);
         } catch (Exception ex) {
             Errors.log(ex);
             Errors.displayWarning("Problem with cipher creation!");
@@ -124,41 +135,43 @@ public class Secure {
     }
 
     /**
-     * Evaporates sea water and refines the resulting NaCl compound for password hashing purposes.
-     * @return A sodium chloride atom.
+     * Creates a specified number of random bytes for salts or IVs.
      */
-    public static String createSalt() {
-        return Crypt.generateSalt();
+    public static byte[] createRandomBytes(int numBytes) {
+    	SecureRandom rand = new SecureRandom();
+    	byte[] nacl = new byte[numBytes];
+    	rand.nextBytes(nacl);
+        return nacl;
     }
 
-    /**
-     * Creates a 16 byte key for AES using jBCrypt, a Java implementation of OpenBSD's
-     * Blowfish password hashing code, as described in "A Future-Adaptable Password Scheme"
-     * by Niels Provos and David Mazières.
-     */
-    private byte[] makeAESKey(String password, String salt) {
-        try {            
-            byte[] hash = Crypt.hashPassword(password, salt).getBytes("UTF-8");
-            byte[] key = new byte[16];
-
-            if(hash.length < 32) {
-                Errors.displayWarning("Password hash length too small!");
-                Errors.log(new GeneralSecurityException("Password hash length too small!"));
-                System.exit(1);
-            }
-
-            int leftPos = 0, rightPos = 31;
-            while(rightPos > 15) {
-                key[leftPos] = (byte) (hash[leftPos] ^ hash[rightPos]);
-                leftPos++;
-                rightPos--;
-            }
-
-            return key;
-        } catch (UnsupportedEncodingException ex) {
-            Errors.log(ex);
-            System.exit(1);
-            return null;
-        }
-    }
+//    /**
+//     * Creates a 16 byte key for AES using jBCrypt, a Java implementation of OpenBSD's
+//     * Blowfish password hashing code, as described in "A Future-Adaptable Password Scheme"
+//     * by Niels Provos and David Mazières.
+//     */
+//    private byte[] makeAESKey(String password, String salt) {          
+//        byte[] hash = Crypt.hashPassword(password, salt);
+//        
+//        System.out.print("Length: " + hash.length + "\t");
+//        for(byte b : hash)
+//        	System.out.print(b + "\t");
+//        System.out.println();
+//        
+//        byte[] key = new byte[16];
+//
+//        if(hash.length < 24) {
+//            Errors.displayWarning("Password hash length too small!");
+//            Errors.log(new GeneralSecurityException("Password hash length too small!"));
+//            System.exit(1);
+//        }
+//
+//        int leftPos = 0, rightPos = 23;
+//        while(rightPos > 15) {
+//            key[leftPos] = (byte) (hash[leftPos] ^ hash[rightPos]);
+//            leftPos++;
+//            rightPos--;
+//        }
+//
+//        return key;
+//    }
 }

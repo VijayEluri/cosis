@@ -606,7 +606,7 @@ class Crypt {
 	 * using Crypt.gensalt)
 	 * @return	the hashed password, this string is 32 chars long
 	 */
-	public static String hashPassword(String password, String salt) {
+	public static byte[] hashPassword(String password, String salt) {
 		Crypt B;
 		String real_salt;
 		byte passwordb[], saltb[], hashed[];
@@ -642,9 +642,8 @@ class Crypt {
 		B = new Crypt();
 		hashed = B.cryptRaw(passwordb, saltb, rounds);
 
-		rs.append(encodeBase64(hashed,
-				hashed.length));
-		return rs.toString();
+		
+		return hashed;
 	}
 
 	/**

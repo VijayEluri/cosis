@@ -148,7 +148,7 @@ public class Profile {
      * @param password password for Profile
      * @return true only if the profile was created sucessfully
      */
-    public static boolean generateProfile(String name, String password, String salt) {
+    public static boolean generateProfile(String name, String password, byte[] salt) {
         try {
             String filename = FileIO.getFileNameForName(name);
             if(filename == null)
@@ -178,7 +178,7 @@ public class Profile {
                 verification += letters[rand.nextInt(letters.length)];
             }
 
-            String encryptedVerif = new Secure(password, salt).encrypt(verification);
+            String encryptedVerif = new Secure(password.toCharArray(), salt).encrypt(verification);
 
 
             //now let's start writing to the user's file!

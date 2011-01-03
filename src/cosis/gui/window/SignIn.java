@@ -374,7 +374,7 @@ public class SignIn implements ManagedWindow {
         @Override
         public Boolean doInBackground() {
             return user.authenticate(new Secure(
-                    new String(panel.pwField.getPassword()),
+                    panel.pwField.getPassword(),
                     user.getSalt()));
         }
 
@@ -384,7 +384,7 @@ public class SignIn implements ManagedWindow {
                 if (!get()) {
                     lookBusy(false);
                     panel.pwField.setText("");
-                    attempts++;
+                    //attempts++;
 
                     if ((attempts % 2) != 0 && attempts >= 3) {
                         Errors.log(new SecurityException(attempts + " bad password attempts on "
