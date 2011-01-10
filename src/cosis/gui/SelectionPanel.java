@@ -18,14 +18,17 @@ package cosis.gui;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.Image;
 import java.util.ArrayList;
 
 import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.ListCellRenderer;
+import javax.swing.ListSelectionModel;
 
 import cosis.media.Picture;
 
@@ -41,8 +44,9 @@ public class SelectionPanel extends JPanel {
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
 		list = new JList();
+		list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		list.setCellRenderer(new AccountListRenderer());
-		list.setPreferredSize(new Dimension(248,0));
+		list.setPreferredSize(new Dimension(192,0));
 		
 		list.setListData(accounts.toArray());
 		
@@ -55,27 +59,31 @@ public class SelectionPanel extends JPanel {
 	
 	
 	
-	private class AccountListRenderer implements ListCellRenderer {
+	private class AccountListRenderer extends JLabel implements ListCellRenderer {
 
+		private final Color HIGHLIGHT_COLOR = new Color(173, 216, 230);
+		
+		public AccountListRenderer() {
+			setOpaque(true);
+		    setIconTextGap(10);
+		}
+		
 		@Override
 		public Component getListCellRendererComponent(JList list, Object value,
 				int index, boolean isSelected, boolean cellHasFocus) {
 			
-			JLabel label = new JLabel();
 			Account a = (Account)value;
 			
-			label.setText(a.getName());
-			label.setIcon(a.getImageIcon());
+			setText(a.getName());
+			setIcon(new ImageIcon(a.getImageIcon().getImage().getScaledInstance(22, 22, Image.SCALE_SMOOTH)));	
+
+		    if (isSelected) {
+		      setBackground(HIGHLIGHT_COLOR);
+		    } else {
+		      setBackground(Color.white);
+		    }
 			
-			if(isSelected) {
-				label.setBackground(Color.LIGHT_GRAY);
-			} else {
-				label.setBackground(Color.WHITE);
-			}
-			
-			label.validate();
-			
-			return label;
+			return this;
 		}
 		
 	}

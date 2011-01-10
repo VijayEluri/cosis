@@ -29,10 +29,6 @@ import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.PBEKeySpec;
 
-import org.bouncycastle.jce.provider.BouncyCastleProvider;
-
-import java.security.Security;
-
 /**
  * Used to encrypt and decrypt profile data.
  *
@@ -48,14 +44,13 @@ public class Secure {
      * @param salt Random salt associated with the profile.
      */
     public Secure(char[] password, byte[] salt, byte[] iv) {
-    	try {
-    		Security.addProvider(new BouncyCastleProvider());
-               	
-        	SecretKey secretKey = SecretKeyFactory.getInstance("PBKDF2", "BC").generateSecret(new PBEKeySpec(password, salt, 12354, 32));
+    	try {               	
+    		SecretKey secretKey = SecretKeyFactory.getInstance("PBEWITHSHA-256AND128BITAES-CBC-BC", "BC").generateSecret(new PBEKeySpec(password, salt, 750000));
             IvParameterSpec initVector = new IvParameterSpec(iv);
             
             encryptCipher = Cipher.getInstance("AES/CBC/PKCS5Padding", "BC");
             encryptCipher.init(Cipher.ENCRYPT_MODE, secretKey, initVector);
+            
 
             decryptCipher = Cipher.getInstance("AES/CBC/PKCS5Padding", "BC");
             decryptCipher.init(Cipher.DECRYPT_MODE, secretKey, initVector);
@@ -135,43 +130,12 @@ public class Secure {
     }
 
     /**
-     * Creates a specified number of random bytes for salts or IVs.
+     * Creates 16 random bytes for salts or IVs.
      */
-    public static byte[] createRandomBytes(int numBytes) {
+    public static byte[] createRandomBytes() {
     	SecureRandom rand = new SecureRandom();
-    	byte[] nacl = new byte[numBytes];
+    	byte[] nacl = new byte[16];
     	rand.nextBytes(nacl);
         return nacl;
     }
-
-//    /**
-//     * Creates a 16 byte key for AES using jBCrypt, a Java implementation of OpenBSD's
-//     * Blowfish password hashing code, as described in "A Future-Adaptable Password Scheme"
-//     * by Niels Provos and David Mazières.
-//     */
-//    private byte[] makeAESKey(String password, String salt) {          
-//        byte[] hash = Crypt.hashPassword(password, salt);
-//        
-//        System.out.print("Length: " + hash.length + "\t");
-//        for(byte b : hash)
-//        	System.out.print(b + "\t");
-//        System.out.println();
-//        
-//        byte[] key = new byte[16];
-//
-//        if(hash.length < 24) {
-//            Errors.displayWarning("Password hash length too small!");
-//            Errors.log(new GeneralSecurityException("Password hash length too small!"));
-//            System.exit(1);
-//        }
-//
-//        int leftPos = 0, rightPos = 23;
-//        while(rightPos > 15) {
-//            key[leftPos] = (byte) (hash[leftPos] ^ hash[rightPos]);
-//            leftPos++;
-//            rightPos--;
-//        }
-//
-//        return key;
-//    }
 }

@@ -16,6 +16,7 @@
 package cosis.gui.window;
 
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.Frame;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
@@ -29,8 +30,6 @@ import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
-import javax.crypto.BadPaddingException;
-import javax.crypto.IllegalBlockSizeException;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
@@ -73,11 +72,11 @@ public class MainGUI implements ManagedWindow {
 	private JTextField searchBox;
 	
 	private JButton newAccount, removeAccount, editAccount, copyPassword, copyUsername,	
-						eraseClipboard, eraseSearch, search, menu;
+						eraseClipboard, eraseSearch, search;
 	
 	private final ClipboardManager clipboard = new ClipboardManager();
 	
-	private SelectionPanel selectPanel; //TODO remove this later
+	private SelectionPanel selectPanel;
 	
 	private DisplayPanel displayPanel;
 	
@@ -90,21 +89,12 @@ public class MainGUI implements ManagedWindow {
 		frame.setTitle(profile.getName() + (profile.getName().endsWith("s") ? "'" : "'s") + " Credentials");
         frame.setResizable(Main.DEBUG);
         frame.addWindowListener(new MajorWindowController(this));
-        //frame.setJMenuBar(makeMenuBar());
+        frame.setJMenuBar(makeMenuBar());
         frame.setIconImage(Picture.getImageIcon("icons/size32/cosis.png").getImage());
         
-//        //TODO remove this testing code later
-//        try {
-//			p.getAccounts().add(new Account("Gmail", "accounts/email.png", "", "",
-//											"", "", "", false, false, p));
-//		} catch (IllegalBlockSizeException e1) {
-//			// TODO Auto-generated catch block
-//			e1.printStackTrace();
-//		} catch (BadPaddingException e1) {
-//			// TODO Auto-generated catch block
-//			e1.printStackTrace();
-//		}
-        
+		p.getAccounts().add(new Account("Gmail", Picture.getImageIcon("accounts/email.png"), "", "", "", "", false));
+		p.getAccounts().add(new Account("Treamspeak", Picture.getImageIcon("accounts/audio_headset.png"), "", "", "", "", false));
+		p.getAccounts().add(new Account("kavon.org root", Picture.getImageIcon("accounts/ssh.png"), "", "", "", "", false));
         
         
         selectPanel = new SelectionPanel(p.getAccounts());
@@ -159,9 +149,8 @@ public class MainGUI implements ManagedWindow {
 		eraseClipboard = makeButton("Clear system clipboard", Picture.getImageIcon("icons/size22/clear-clipboard.png"), tl);
 		eraseSearch = makeButton("Clear search box", Picture.getImageIcon("icons/size22/searchbox-clear.png"), tl);
 		search = makeButton("Select a search filter", Picture.getImageIcon("icons/size22/searchbox-find.png"), tl);
-		menu = makeButton("Main Menu", Picture.getImageIcon("icons/size22/menu.png"), tl);
 		
-		searchBox = new JTextField(15); //TODO add keyboard shortcuts to automagically copy pw or username of top hit
+		searchBox = new JTextField(12); //TODO add keyboard shortcuts to automagically copy pw or username of top hit
 		searchBox.addKeyListener(new SearchBoxListener());
 		
 		searchMenu = new JPopupMenu();
@@ -172,22 +161,20 @@ public class MainGUI implements ManagedWindow {
 		searchDisc = makeRadioMenu("Description", tl, bg, searchMenu);
 		
 		searchAll.setSelected(true);
-		
-		menuMenu = makeMenuBar();
 				
-		toolbar.add(menu);
+		toolbar.add(search);
+		toolbar.add(searchBox);
+		toolbar.add(eraseSearch);
 		toolbar.addSeparator();
 		toolbar.add(newAccount);
 		toolbar.add(removeAccount);
 		toolbar.add(editAccount);		
 		toolbar.addSeparator();
-		toolbar.add(search);
-		toolbar.add(searchBox);
-		toolbar.add(eraseSearch);
-		toolbar.addSeparator();
 		toolbar.add(copyUsername);
 		toolbar.add(copyPassword);
 		toolbar.add(eraseClipboard);
+		
+		
 		
 		
 		return toolbar;
@@ -209,8 +196,8 @@ public class MainGUI implements ManagedWindow {
 		return button;
 	}
 	
-	private JPopupMenu makeMenuBar() {
-		JPopupMenu menubar = new JPopupMenu();
+	private JMenuBar makeMenuBar() {
+		JMenuBar menubar = new JMenuBar();
         file = new JMenu("File");
         file.setMnemonic('F');
         
@@ -328,9 +315,6 @@ public class MainGUI implements ManagedWindow {
     			
     		} else if(selectedObject == search) {
     			searchMenu.show(search, 0, search.getHeight());
-    			
-    		} else if(selectedObject == menu) {
-    			menuMenu.show(menu, 0, menu.getHeight());
     			
     		} else if(selectedObject == searchAll) {    			
     			selectPanel.setFilterMode(FilterMode.ALL);

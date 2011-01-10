@@ -40,7 +40,9 @@ public class Profile {
     
     private Secure auth, newAuth = null;
 
-    private String name, salt, verify, hint, backupPath, encryptedVerification;
+    private String name, verify, hint, backupPath, encryptedVerification;
+    
+    private byte[] salt = new byte[16], iv = new byte[16];
 
     private boolean recovery, backup;
 
@@ -63,7 +65,8 @@ public class Profile {
             in = new ObjectInputStream(new FileInputStream(file));
             
             name = in.readUTF();
-            salt = in.readUTF();
+            in.read(salt);
+            in.read(iv);
             verify = in.readUTF();
             encryptedVerification = in.readUTF();
 
@@ -148,7 +151,7 @@ public class Profile {
      * @param password password for Profile
      * @return true only if the profile was created sucessfully
      */
-    public static boolean generateProfile(String name, String password, byte[] salt) {
+    public static boolean generateProfile(String name, String password, byte[] salt, byte[] iv) {
         try {
             String filename = FileIO.getFileNameForName(name);
             if(filename == null)
@@ -178,14 +181,15 @@ public class Profile {
                 verification += letters[rand.nextInt(letters.length)];
             }
 
-            String encryptedVerif = new Secure(password.toCharArray(), salt).encrypt(verification);
+            String encryptedVerif = new Secure(password.toCharArray(), salt, iv).encrypt(verification);
 
 
             //now let's start writing to the user's file!
 
             ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(userFile));
             out.writeUTF(name);
-            out.writeUTF(salt);
+            out.write(salt);
+            out.write(iv);
             out.writeUTF(verification);
             out.writeUTF(encryptedVerif);
 
@@ -218,7 +222,8 @@ public class Profile {
             ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(location));
 
             out.writeUTF(name);
-            out.writeUTF(salt);
+            out.write(salt);
+            out.write(iv);
             out.writeUTF(verify);
 
             if(newAuth != null)
@@ -278,8 +283,15 @@ public class Profile {
     /**
      * @return the salt of this profile
      */
-    public String getSalt() {
+    public byte[] getSalt() {
         return salt;
+    }
+    
+    /**
+     * @return the initialization vector of this profile
+     */
+    public byte[] getIV() {
+    	return iv;
     }
 
     /**

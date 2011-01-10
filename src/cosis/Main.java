@@ -22,9 +22,13 @@ import cosis.gui.window.Welcome;
 import cosis.gui.WindowManager;
 import java.awt.GraphicsEnvironment;
 import java.awt.SystemTray;
+import java.security.Security;
+
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
+
+import org.bouncycastle.jce.provider.BouncyCastleProvider;
 
 /**
  *
@@ -92,6 +96,7 @@ public class Main {
 
         TRAY = SystemTray.isSupported();
         FIRST_RUN = FileIO.isFirstRun();
+        Security.addProvider(new BouncyCastleProvider());
         wm = new WindowManager();
         //Start the GUI
         SwingUtilities.invokeLater(new Runnable() {

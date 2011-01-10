@@ -44,7 +44,7 @@ public class DisplayPanel extends JPanel {
 		setAlignmentX(CENTER_ALIGNMENT);
 		
 		
-		id = new JLabel("User ID:     ");
+		id = new JLabel("User ID:");
 		pw = new JLabel("Password:");
 		descLabel = new JLabel("Description:");
 		
@@ -127,21 +127,6 @@ public class DisplayPanel extends JPanel {
 		add(Box.createVerticalStrut(5));
 		add(dateRow);
 	}
-	
-//	public void showComponents(boolean b) {
-//		id.setVisible(b);
-//		pw.setVisible(b);
-//		descLabel.setVisible(b);
-//		image.setVisible(b);
-//		title.setVisible(b);
-//		date.setVisible(b);
-//		systemTray.setVisible(b);
-//		idBox.setVisible(b);
-//		pwBox.setVisible(b);
-//		desc.setVisible(b);
-//		showHide.setVisible(b);
-//		validate();
-//	}
 	
 	public void refresh() {
 		

@@ -375,7 +375,8 @@ public class SignIn implements ManagedWindow {
         public Boolean doInBackground() {
             return user.authenticate(new Secure(
                     panel.pwField.getPassword(),
-                    user.getSalt()));
+                    user.getSalt(),
+                    user.getIV()));
         }
 
         @Override
